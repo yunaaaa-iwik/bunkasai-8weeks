@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>文化祭まで、あと8週間</title>
+<meta name="description" content="8週間の文化祭準備を、どこまで効率化しますか。選んで、最後に写真を見る、約8分のゲーム。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="文化祭まで、あと8週間">
+<meta property="og:description" content="8週間の文化祭準備を、どこまで効率化しますか。選んで、最後に写真を見る、約8分のゲーム。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文化祭まで、あと8週間">
+<meta name="twitter:description" content="8週間の文化祭準備を、どこまで効率化しますか。選んで、最後に写真を見る、約8分のゲーム。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#dfe9ec; --ink:#16302f; --board:#1d4a45; --frame:#b98a55; --chalk:#f5f7f1; --dim:#b9cfc8;
+  --yellow:#ffd84d; --pink:#ff8fb1; --sky:#8fd3ff; --green:#b6ffb0;
+  --disp:"Yusei Magic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page:#0f1a1d; --ink:#d6e6e2; --board:#143733; --frame:#6b4e30; color-scheme:dark; }
+}
+:root[data-theme="dark"]{ --page:#0f1a1d; --ink:#d6e6e2; --board:#143733; --frame:#6b4e30; color-scheme:dark; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0; background:var(--page); color:var(--ink); font-family:var(--body); line-height:1.7; min-height:100vh; -webkit-tap-highlight-color:transparent}
+main{max-width:560px; margin:0 auto; padding:14px 14px 70px}
+.top{display:flex; justify-content:space-between; align-items:center; min-height:30px; padding:0 6px 8px; font-family:var(--disp); font-size:1.1rem}
+.heat{display:flex; gap:6px; align-items:center; font-family:var(--body); font-size:.8rem; font-weight:700}
+.heat i{width:13px; height:13px; border-radius:50%; border:2px solid var(--ink); display:inline-block; transition:background .3s, transform .3s}
+.heat i.on{background:var(--yellow); border-color:var(--yellow); transform:scale(1.15); box-shadow:0 0 8px var(--yellow)}
+
+.hud{position:sticky; top:0; z-index:5; background:var(--board); border:6px solid var(--frame); border-radius:6px; padding:6px 8px 8px; margin-bottom:12px; color:var(--chalk); box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.hud[hidden]{display:none}
+.stage svg{display:block; width:100%; max-height:240px; margin:0 auto}
+.scr{font-family:var(--disp); font-size:.88rem; color:var(--yellow); text-align:center; min-height:1.5em; margin-top:2px}
+.hud.flash .stage{animation:flash .7s ease}
+.hud.beat .stage{filter:brightness(1.35)}
+@keyframes flash{30%{filter:brightness(1.5) drop-shadow(0 0 10px var(--yellow))}}
+
+.board{
+  background:var(--board); color:var(--chalk); border:11px solid var(--frame); border-radius:6px;
+  padding:22px 20px 26px; min-height:300px; box-shadow:0 8px 0 rgba(0,0,0,.18); font-family:var(--disp); position:relative; overflow:hidden;
+}
+.board h1{font-weight:400; font-size:clamp(2rem,9.5vw,2.8rem); line-height:1.3; margin:18px 0 12px}
+.board h1 em{font-style:normal; color:var(--yellow)}
+.board h1.long{font-size:clamp(1.5rem,6.8vw,2.1rem); line-height:1.45}
+.sub{color:var(--dim); margin:0 0 6px; font-size:1rem}
+.setup{font-size:1.15rem; margin:6px 0 18px}
+.lead{font-size:1.1rem; margin:0 0 18px; color:var(--dim)}
+.big{font-size:1.3rem; margin:10px 0}
+.meta{color:var(--dim); font-size:.92rem; margin:4px 0 14px}
+.say{color:var(--sky); font-size:1.08rem; min-height:2.4em; margin:6px 0 14px}
+.mo{color:#cfd8dc; font-size:1.08rem; margin:10px 0 6px; animation:fog 1.6s ease both}
+@keyframes fog{from{opacity:0; filter:blur(6px)}to{opacity:1; filter:none}}
+.foot{color:var(--dim); font-family:var(--body); font-size:.8rem; margin-top:18px}
+.fx{list-style:none; margin:0 0 20px; padding:0; display:grid; gap:6px}
+.fx li{font-family:var(--body); font-size:.92rem; line-height:1.55; padding-left:1.1em; position:relative}
+.fx li::before{content:"・"; position:absolute; left:0; color:var(--yellow)}
+
+.choices{display:grid; gap:12px}
+.chalk{
+  font-family:var(--disp); font-size:1.15rem; color:var(--chalk); background:transparent; cursor:pointer;
+  border:2px solid var(--chalk); border-radius:10px; padding:12px 16px; text-align:left;
+  transition:background .15s, transform .08s; touch-action:manipulation; user-select:none; -webkit-user-select:none;
+}
+.chalk:hover{background:rgba(255,255,255,.08)}
+.chalk:active{transform:scale(.97)}
+.chalk b{display:block; font-weight:400}
+.chalk span{display:block; font-family:var(--body); font-size:.82rem; color:var(--dim); margin-top:2px}
+.chalk.y{border-color:var(--yellow); color:var(--yellow)}
+.chalk.p{border-color:var(--pink); color:var(--pink)}
+.chalk.s{border-color:var(--sky); color:var(--sky)}
+.chalk.g{border-color:var(--green); color:var(--green)}
+.chalk.wide{width:100%; text-align:center; padding:18px; font-size:1.4rem}
+.chalk[disabled]{opacity:.35; cursor:default}
+.chalk:focus-visible{outline:3px solid var(--sky); outline-offset:3px}
+.row{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+
+.bar{height:14px; border:2px solid var(--dim); border-radius:8px; overflow:hidden; margin:8px 0 6px}
+.bar i{display:block; height:100%; width:0; background:var(--yellow)}
+.pulse{width:120px; height:120px; border-radius:50%; margin:8px auto; border:4px solid var(--pink); display:grid; place-items:center; font-size:1.3rem; transition:transform .08s, background .08s}
+.pulse.on{transform:scale(1.16); background:rgba(255,143,177,.35)}
+.pulse.count{border-color:var(--dim)}
+.status{text-align:center; color:var(--dim); min-height:1.8em; margin:0 0 10px}
+.cards{display:grid; gap:12px}
+.card{border:2px solid var(--dim); border-radius:10px; padding:12px 14px; background:rgba(255,255,255,.04)}
+.card .who{font-family:var(--body); font-size:.78rem; color:var(--dim); margin:0 0 4px}
+.card .ln{font-size:1.15rem; margin:0}
+
+/* the inner voice: a notebook page, not a chalkboard */
+.note{
+  --nc:#8fd3ff; background-color:#eef3f6; color:#16302f; border-radius:4px; padding:10px 14px 10px 16px; border-left:6px solid var(--nc);
+  margin:0 0 12px; font-family:var(--disp); font-size:1rem; line-height:1.85em;
+  background-image:repeating-linear-gradient(transparent, transparent calc(1.85em - 1px), rgba(30,70,100,.14) calc(1.85em - 1px), rgba(30,70,100,.14) 1.85em);
+  animation:noteIn .7s ease both;
+}
+.note h4{margin:0 0 2px; font-family:var(--body); font-size:.76rem; color:#4a6a66; font-weight:700; line-height:1.8}
+.note p{margin:0}
+.note.ai{--nc:#cfd8dc; background-color:#e4e9ec}
+@keyframes noteIn{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+
+/* the ending: what each person feels, and why */
+.end{--nc:#8fd3ff; background:#eef3f6; color:#16302f; border-radius:6px; border-left:8px solid var(--nc); padding:10px 14px 12px; margin:0 0 12px; animation:noteIn .7s ease both}
+.end.fog{--nc:#cfd8dc; background:#e4e9ec}
+.end .eh{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px}
+.end .en{font-family:var(--disp); font-size:1.15rem}
+.end .ef{background:var(--nc); color:#16302f; border-radius:999px; padding:1px 12px; font-family:var(--body); font-weight:700; font-size:.95rem}
+.end .ew{margin:0 0 6px; font-family:var(--body); font-size:.82rem; color:#4a6a66}
+.end .el{margin:0; font-family:var(--disp); font-size:1.02rem; line-height:1.7}
+.end .eg{margin:6px 0 0; font-family:var(--body); font-size:.76rem; color:#6a7b78}
+.end .eb{margin:0 0 6px; font-family:var(--body); font-size:.9rem; line-height:1.7; color:#2f4a47}
+.intro{border:2px solid var(--nc); border-radius:10px; padding:10px 14px; margin:0 0 10px; background:rgba(255,255,255,.04); animation:noteIn .6s ease both}
+.intro .ih{display:flex; align-items:center; gap:10px; margin-bottom:2px}
+.intro .iav{width:30px; height:30px; border-radius:50%; display:grid; place-items:center; color:#16302f; font-family:var(--disp)}
+.intro .in{font-size:1.15rem}
+.intro .ir{font-family:var(--body); font-size:.8rem; color:var(--dim)}
+.intro .it{margin:0; font-family:var(--body); font-size:.92rem; line-height:1.6; color:var(--chalk)}
+.intro .ip{margin:4px 0 0; font-family:var(--body); font-size:.8rem; color:var(--dim)}
+.photo{background:#f7f9fa; color:#16302f; border-radius:3px; padding:10px 12px 14px; box-shadow:0 3px 0 rgba(0,0,0,.2); transform:rotate(-.6deg); margin:0 0 12px; font-family:var(--disp); animation:noteIn .7s ease both}
+.photo .pd{font-family:var(--body); font-size:.74rem; color:#4a6a66}
+.photo .pt{margin:4px 0 0; font-size:.98rem; line-height:1.7}
+.photo.blank{background:#e4e9ec; color:#8a9894; transform:none; box-shadow:none; border:1px dashed #aab8b4}
+.photo .lg{margin:6px 0 0; font-family:var(--body); font-size:.76rem; color:#7a8a86}
+.photo .hd{margin:4px 0 0; font-family:var(--body); font-size:.76rem; color:#7a8a86}
+.box{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 18px}
+.box .photo:nth-child(even){transform:rotate(.8deg)}
+.box .photo.blank:nth-child(even){transform:none}
+@media (max-width:480px){ .box{grid-template-columns:1fr} }
+.photo .pa svg{display:block; width:100%; max-width:220px; margin:0 auto 6px; border-radius:2px}
+.roll{background:#0f1417; border-radius:20px; padding:12px 10px 14px; color:#e8eef0; font-family:var(--body); border:3px solid #2a3338; margin:0 0 18px}
+.roll .rh{display:flex; justify-content:space-between; align-items:center; padding:2px 6px 10px; gap:8px}
+.roll .rh b{font-size:1.05rem}
+.roll .rh span{font-size:.8rem; color:#9ab0b6}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:3px}
+.tile{position:relative; padding:0; border:0; background:none; cursor:pointer; aspect-ratio:1/1; overflow:hidden; display:block}
+.tile .ta{width:100%; height:100%}
+.tile svg{display:block; width:100%; height:100%}
+.tile .td{position:absolute; left:4px; bottom:3px; font-size:.62rem; color:#fff; text-shadow:0 1px 3px #000}
+.tile .tn{position:absolute; right:4px; bottom:3px; font-size:.62rem; color:#5b6b70}
+.tile:focus-visible{outline:3px solid var(--sky); outline-offset:-3px}
+.big-art svg{display:block; width:100%; height:auto; border-radius:4px}
+.meta2{list-style:none; margin:10px 0 6px; padding:0; font-size:.8rem; color:#9ab0b6; display:grid; gap:2px}
+.cap2{margin:6px 4px 0; font-family:var(--disp); font-size:1rem; line-height:1.7}
+.cap2.dim{color:#8a9aa0; font-family:var(--body); font-size:.85rem}
+.reel{position:relative; width:100%; max-width:300px; margin:0 auto; aspect-ratio:9/16; background:#000; border-radius:16px; overflow:hidden}
+.reel.done{display:grid; place-items:center}
+.rend{color:#9ab0b6; font-size:1rem}
+.rbars{position:absolute; top:8px; left:8px; right:8px; display:flex; gap:4px; z-index:2}
+.rbars i{flex:1; height:3px; background:rgba(255,255,255,.3); border-radius:2px; overflow:hidden}
+.rbars i b{display:block; height:100%; width:0; background:#fff}
+.ra{position:absolute; inset:0; display:grid; place-items:center}
+.ra svg{width:100%; height:auto}
+.ra.dark svg{filter:brightness(.12)}
+.rtag{position:absolute; top:20px; left:12px; color:#fff; font-size:.78rem; z-index:2; text-shadow:0 1px 3px #000}
+.rc{position:absolute; left:14px; right:14px; bottom:24px; color:#fff; font-family:var(--disp); font-size:.98rem; line-height:1.7; text-shadow:0 1px 6px rgba(0,0,0,.85); z-index:2}
+.rc.nophoto{top:50%; bottom:auto; transform:translateY(-50%); text-align:center; white-space:pre-line; font-family:var(--body); font-size:.95rem; color:#cfd8dc}
+.msg{width:100%; font-family:var(--body); font-size:1rem; line-height:1.7; color:#16302f; background:#eef3f6; border:2px solid var(--dim); border-radius:8px; padding:10px 12px; resize:vertical}
+.msg:focus-visible{outline:3px solid var(--sky); outline-offset:2px}
+a.chalk{display:inline-block; text-decoration:none}
+.share{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:8px 0 6px}
+
+.cap{font-size:1.2rem; min-height:3.2em; text-align:center; margin:0}
+.clx{font-size:1.5rem; color:var(--yellow); text-align:center; min-height:2.4em; margin:8px 0 0}
+
+.cmp{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0 16px}
+.col{border:2px solid var(--dim); border-radius:10px; padding:8px; font-size:.95rem}
+.col.me{border-color:var(--yellow)}
+.col h3{font-weight:400; font-size:1.05rem; margin:0 0 4px}
+.col.me h3{color:var(--yellow)}
+.col .stage svg{max-height:none}
+.brow{margin:0 0 14px}
+.bl{margin:0 0 4px; font-size:1rem}
+.bar2{display:block; margin:7px 0; font-family:var(--body); font-size:.78rem; color:var(--dim)}
+.bar2 .bt{display:block; margin-bottom:3px}
+.trk{width:100%; height:12px; background:rgba(255,255,255,.1); border-radius:6px; overflow:hidden}
+.trk i{display:block; height:100%; border-radius:6px; background:var(--dim)}
+.bar2.me .trk i{background:var(--yellow)}
+
+@media (max-width:480px){ .cmp{grid-template-columns:1fr} .board{padding:18px 15px 22px} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important; animation:none!important} }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><span id="day"></span><span class="heat" id="heat" aria-label="熱"></span></div>
+  <section class="hud" id="hud" hidden></section>
+  <section class="board" id="board"></section>
+</main>
+
+<script>
+const $board = document.getElementById('board');
+const $day = document.getElementById('day');
+const $heat = document.getElementById('heat');
+const $hud = document.getElementById('hud');
+const BPM = 96, BEAT = 60 / BPM;
+const NSCENE = 6;
+const SHARE_URL = '';   // put the public address of the finished site here; while empty, this page's own address is used
+const FINAL_MESSAGE = 'このゲームは全てAIで作られています。文化祭の準備の時の甘酸っぱい青春、何かに心血を注ぎ、一致団結して高い熱量で物事を成し遂げる達成感は、AIで生み出せるのか。そんな問いから作りました。AIが作ったものに触れるとき、人間が生み出したものに触れるときとは違う感情が生まれるのではないか。その問いも込めています。\nAIに任せることが悪と言いたいわけではありません。どこまでをAIに任せ、どこまでを人間が担うのか。どこまで効率化を追い求めるのか。そういったことを考えるきっかけになることを願っています。';
+
+const CREW = [
+  {id:'mio', name:'ミオ', c:'#ff8fb1', role:'美術部'},
+  {id:'kenta', name:'ケンタ', c:'#ffd84d', role:'お調子者'},
+  {id:'haruka', name:'ハルカ', c:'#8fd3ff', role:'学級委員'},
+  {id:'sou', name:'ソウ', c:'#b6ffb0', role:'無口'}
+];
+const NAME = {}; CREW.forEach(c => NAME[c.id] = c.name);
+const COLOR = {}; CREW.forEach(c => COLOR[c.id] = c.c);
+const NEG = ['もやもや','さみしい','くやしい','むりしてる','ひとり','ひとりで抱えてる','ひりひり','複雑','こわい'];
+const POS = ['うれしい','ほっとした','くすぐったい','ほんとは、うれしい'];
+const GEST = {
+  mio:{neg:'ノートを抱えてる', pos:'鉛筆を回してる', neu:'窓を見てる'},
+  kenta:{neg:'貧乏ゆすり', pos:'指で机を叩いてる', neu:'椅子を傾けてる'},
+  haruka:{neg:'ペンを噛んでる', pos:'ノートを閉じた', neu:'時計を見てる'},
+  sou:{neg:'音量を上げた', pos:'片耳だけ外した', neu:'画面を見てる'}
+};
+function gestureOf(id, m){ return GEST[id][NEG.includes(m) ? 'neg' : (POS.includes(m) ? 'pos' : 'neu')]; }
+
+const CHAT = {
+  mio:{hi:'ミオ「今日も、塗る…? 無理なら、いいけど」', lo:'ミオが窓の外を見てる。'},
+  kenta:{hi:'ケンタ「今日、ここまで噛まずに言えたんだよ。見てた?」', lo:'ケンタが、給食のパンを2個、机に置いてる。'},
+  haruka:{hi:'ハルカ「今日は助かった。ありがとう」', lo:'ハルカがノートに予定を書き足してる。'},
+  sou:{hi:'ソウ「…これ、聞いてみて」', lo:'ソウがすみで、ヘッドホンをつけてる。'}
+};
+const CHATNEG = {
+  mio:'ミオはノートを抱えたまま、黙ってる。',
+  kenta:'ケンタが、いつもより大きい声で冗談を言ってる。',
+  haruka:'ハルカは誰よりも早く来て、誰よりも遅くまで残ってる。',
+  sou:'ソウがヘッドホンの音量を上げた。'
+};
+const REACT = {
+  mio:{call:{text:'ミオ「え、見てたの…? 大丈夫、ほんとに」と言って、少し笑った。', mood:'ほっとした', bond:1},
+       leave:{text:'ミオはノートを鞄にしまって、帰る準備を始めた。', mood:'さみしい', bond:0}},
+  kenta:{call:{text:'ケンタ「やめろって、そういうの。…でも、サンキュ」', mood:'くすぐったい', bond:1},
+         leave:{text:'ケンタは、いつもの調子で笑った。声が大きすぎた。', mood:'むりしてる', bond:0}},
+  haruka:{call:{text:'ハルカ「平気。…でも、ありがと」。目が少し赤かった。', mood:'ほんとは、うれしい', bond:1},
+          leave:{text:'ハルカは「大丈夫」と言って、またノートを開いた。', mood:'ひとりで抱えてる', bond:0}},
+  sou:{call:{text:'ソウは何も言わずにうなずいた。', mood:'ほっとした', bond:1},
+       leave:{text:'ソウはまたヘッドホンをつけた。', mood:'ひとり', bond:0}}
+};
+
+const G = {};
+function newGame(){
+  G.heat = 0; G.scene = 0; G.beat = null; G.log = []; G.hours = 0; G.aiCount = 0;
+  G.bond = {mio:1, kenta:1, haruka:1, sou:1};
+  G.mood = {mio:'', kenta:'', haruka:'', sou:''};
+  G.fog = {mio:0, kenta:0, haruka:0, sou:0};
+  G.moodOrder = []; G.called = {}; G.ignored = {}; G.leftToHaruka = false; G.usedAIHelp = false; G.visits = 0; G.mem = {}; G.heard = {};
+  G.st = {lead:null, leadMode:null, kenta:'present', script:null, back:null, decor:null, music:null};
+  G.timers = []; G.raf = 0;
+}
+newGame();
+const fogTotal = f => CREW.reduce((a, c) => a + (f[c.id] || 0), 0);
+
+function h(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  for (const k in (attrs || {})){
+    const v = attrs[k];
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k === 'disabled') { if (v) e.setAttribute('disabled',''); }
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v);
+  }
+  for (const c of kids.flat()){
+    if (c == null || c === false) continue;
+    e.append(c.nodeType ? c : document.createTextNode(c));
+  }
+  return e;
+}
+const later = (fn, ms) => { const t = setTimeout(fn, ms); G.timers.push(t); return t; };
+function clearAll(){ G.timers.forEach(clearTimeout); G.timers = []; cancelAnimationFrame(G.raf); }
+function bondUp(id, d){ G.bond[id] = Math.max(0, Math.min(4, G.bond[id] + d)); }
+function setMood(id, m){ G.mood[id] = m; G.moodOrder = G.moodOrder.filter(x => x !== id); G.moodOrder.push(id); }
+
+/* ---------------- audio ---------------- */
+let AC = null, master = null, NB = null;
+function initAudio(){
+  try{
+    if (!AC){
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return;
+      AC = new C(); master = AC.createGain(); master.gain.value = .8; master.connect(AC.destination);
+    }
+    if (AC.state === 'suspended') AC.resume();
+  }catch(e){ AC = null; }
+}
+const clock = () => AC ? AC.currentTime : performance.now() / 1000;
+function noiseBuf(){
+  if (NB) return NB;
+  const len = AC.sampleRate * 2; NB = AC.createBuffer(1, len, AC.sampleRate);
+  const d = NB.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  return NB;
+}
+function noise(t, dur, o){
+  if (!AC) return; o = o || {};
+  const s = AC.createBufferSource(); s.buffer = noiseBuf(); s.loop = true;
+  const f = AC.createBiquadFilter(); f.type = o.type || 'bandpass';
+  f.frequency.setValueAtTime(o.freq || 1000, t);
+  f.Q.value = o.q || 1;
+  const g = AC.createGain(); const v = o.vol || .1, a = Math.min(o.attack || .01, dur * .95);
+  g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(v, t + a); g.gain.linearRampToValueAtTime(.0001, t + dur);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t, Math.random()); s.stop(t + dur + .05);
+}
+function tone(f, t, dur, type, vol){
+  if (!AC) return;
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'sine'; o.frequency.value = f;
+  g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol || .1, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + .05);
+}
+function pad(f, t, dur, vol){
+  if (!AC) return;
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.value = f;
+  g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol, t + .8);
+  g.gain.setValueAtTime(vol, t + Math.max(.9, dur - .8)); g.gain.linearRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + .05);
+}
+function kick(t, vol){
+  if (!AC) return;
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine';
+  o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(45, t + .12);
+  g.gain.setValueAtTime(vol || .5, t); g.gain.exponentialRampToValueAtTime(.001, t + .3);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + .35);
+}
+const click = (t, v) => tone(1100, t, .05, 'square', v || .05);
+const tick = (t, v) => { tone(420, t, .09, 'triangle', v || .06); noise(t, .04, {freq:2500, q:1.2, vol:(v || .06) * .6}); };
+function applause(t0, dur, count, vol){
+  if (!AC) return;
+  for (let i = 0; i < count; i++){
+    const t = t0 + Math.random() * dur;
+    const swell = Math.sin(Math.min(1, (t - t0) / dur) * Math.PI);
+    noise(t, .03 + Math.random() * .04, {freq:1200 + Math.random() * 3200, q:.7, vol:vol * (.25 + swell * .75) * (.5 + Math.random() * .5), attack:.005});
+  }
+}
+/* Sou's sound: one fixed loop on the same beat grid, used while you tap AND on opening night */
+function souLoop(origin, halfBeats){
+  if (!AC) return;
+  const arp = [220, 261.63, 329.63, 261.63];
+  for (let i = 0; i < halfBeats; i++){
+    tone(arp[i % 4] * 2, origin + i * BEAT / 2, .4, 'triangle', .05);
+    if (i % 4 === 0) tone(110, origin + i * BEAT / 2, BEAT * 1.8, 'sine', .09);
+  }
+}
+
+/* ---------------- the stage: choices, feelings, and the fog ---------------- */
+function starPts(cx, cy, r){
+  let p = '';
+  for (let i = 0; i < 10; i++){
+    const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * .45 : r;
+    p += (cx + Math.cos(a) * rr).toFixed(1) + ',' + (cy + Math.sin(a) * rr).toFixed(1) + ' ';
+  }
+  return p;
+}
+const starSVG = (cx, cy, r, fill) => '<polygon points="' + starPts(cx, cy, r) + '" fill="' + fill + '"/>';
+
+function paintedBackdrop(mode, uid){
+  let s = '<defs><linearGradient id="sky' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2a6b"/><stop offset="1" stop-color="#5a3b8c"/></linearGradient></defs>';
+  s += '<rect x="52" y="30" width="296" height="110" fill="url(#sky' + uid + ')"/>';
+  s += mode === 'ai' ? '<circle cx="306" cy="62" r="17" fill="#fff6c9"/>' : '<circle cx="302" cy="64" r="19" fill="#ffe9a0"/><circle cx="295" cy="60" r="3" fill="#f2d57c"/>';
+  const A = [[90,50],[130,75],[170,48],[215,70],[250,45],[110,105],[190,100],[260,98],[330,112],[75,82]];
+  A.forEach((p, i) => {
+    if (mode === 'ai') s += starSVG(75 + (i % 5) * 55, 56 + Math.floor(i / 5) * 46, 5, '#fff');
+    else s += starSVG(p[0] + ((i * 7) % 9) - 4, p[1] + ((i * 5) % 7) - 3, 4 + (i % 3) * 1.6, i % 3 ? '#ffd84d' : '#fff0b8');
+  });
+  return s;
+}
+function backdropSVG(st, live, uid){
+  const base = '<rect x="52" y="30" width="296" height="110" fill="#dfe4e6"/>';
+  const shoot = '<path d="M236 92 L196 126" stroke="#ffd84d" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>' + starSVG(240, 88, 11, '#ffd84d');
+  const spill = '<g opacity=".92"><circle cx="240" cy="90" r="17" fill="#ff8fb1"/><circle cx="259" cy="105" r="7" fill="#ff8fb1"/><circle cx="224" cy="107" r="5" fill="#ff8fb1"/></g>';
+  if (live && live.paint){
+    const p = Math.max(0, Math.min(1, live.paint.n / live.paint.total));
+    let o = base + '<clipPath id="cp' + uid + '"><rect x="52" y="30" width="' + (296 * p).toFixed(1) + '" height="110"/></clipPath><g clip-path="url(#cp' + uid + ')">' + paintedBackdrop('hand', uid) + '</g>';
+    if (live.paint.blob === 'spill') o += spill;
+    if (live.paint.blob === 'star') o += shoot;
+    return o;
+  }
+  if (st.back){
+    let o = paintedBackdrop(st.back.mode, uid);
+    if (st.back.mode === 'hand' && st.back.star) o += shoot;
+    return o;
+  }
+  return base + '<text x="200" y="88" text-anchor="middle" font-size="14" fill="#6a7b78" font-family="Zen Maru Gothic, sans-serif">背景幕は、まだ</text>';
+}
+function figSVG(c, i, st, bond, mood, lights, costumes, bob, fogN, uid){
+  const x = [95, 165, 235, 305][i], y = 150 + (bob ? bob * 4 : 0);
+  const FF = 'font-family="Zen Maru Gothic, sans-serif"';
+  let o = '<g transform="translate(' + x + ' ' + y + ')">';
+  let fogDeco = '';
+  if (fogN > 0){
+    fogDeco = '<ellipse cx="0" cy="-8" rx="26" ry="36" fill="#cfd8dc" opacity="' + Math.min(.8, .3 + .15 * fogN).toFixed(2) + '" filter="url(#fg' + uid + ')"/>' +
+      '<g transform="translate(17 -52)"><rect x="-10" y="-8" width="22" height="15" rx="7" fill="#f5f7f1"/><text x="1" y="3" text-anchor="middle" font-size="11" fill="#16302f" font-family="sans-serif">…</text></g>';
+  }
+  const kState = c.id === 'kenta' ? st.kenta : 'present';
+  if (kState === 'ai'){
+    o += '<rect x="-12" y="-22" width="24" height="34" rx="5" fill="#0d2220" stroke="#b9cfc8"/><circle cx="0" cy="-5" r="8" fill="none" stroke="#b9cfc8"/><circle cx="0" cy="-5" r="2.5" fill="#b9cfc8"/>';
+    o += '<text x="0" y="26" text-anchor="middle" font-size="9" fill="#b9cfc8" ' + FF + '>AIの声</text>';
+    if (fogN > 0) o += '<text x="0" y="36" text-anchor="middle" font-size="8.5" fill="#cfd8dc" ' + FF + '>…</text>';
+    return o + fogDeco + '</g>';
+  }
+  if (kState === 'absent'){
+    o += '<circle cx="0" cy="-26" r="9" fill="none" stroke="#b9cfc8" stroke-dasharray="3 3"/><rect x="-8" y="-17" width="16" height="30" rx="4" fill="none" stroke="#b9cfc8" stroke-dasharray="3 3"/>';
+    o += '<text x="0" y="26" text-anchor="middle" font-size="9" fill="#b9cfc8" ' + FF + '>ケンタ(欠席)</text></g>';
+    return o;
+  }
+  if (i < costumes) o += '<path d="M-8 -16 L-19 14 L19 14 L8 -16 Z" fill="' + (st.decor && st.decor.mode === 'ai' ? '#f5f7f1' : c.c) + '" opacity=".8"/>';
+  o += '<rect x="-8" y="-17" width="16" height="30" rx="4" fill="#16302f" stroke="' + c.c + '" stroke-width="2"/>';
+  o += '<circle cx="0" cy="-26" r="9" fill="' + c.c + '"/>';
+  o += '<text x="0" y="-22.5" text-anchor="middle" font-size="10" fill="#16302f" font-family="Yusei Magic, sans-serif">' + c.name.charAt(0) + '</text>';
+  const b = Math.round(bond[c.id]);
+  o += '<text x="0" y="-41" text-anchor="middle" font-size="10" fill="' + (fogN > 0 ? '#cfd8dc' : '#ff8fb1') + '" font-family="sans-serif">' + (fogN > 0 ? '？？？？' : '♥'.repeat(b) + '♡'.repeat(4 - b)) + '</text>';
+  if (st.lead === c.id) o += starSVG(0, -57, 7, '#ffd84d');
+  o += '<text x="0" y="26" text-anchor="middle" font-size="9" fill="#f5f7f1" ' + FF + '>' + c.name + (st.lead === c.id ? '(主役)' : '') + '</text>';
+  const m = fogN > 0 ? '…' : mood[c.id];
+  if (m){
+    const col = fogN > 0 ? '#cfd8dc' : (NEG.includes(m) ? '#ff9d8f' : (POS.includes(m) ? '#b6ffb0' : '#f5f7f1'));
+    o += '<text x="0" y="36" text-anchor="middle" font-size="8.5" fill="' + col + '" ' + FF + '>' + m + '</text>';
+  }
+  return o + fogDeco + '</g>';
+}
+function stageSVG(st, bond, live, uid, mood, fog){
+  live = live || {}; mood = mood || {}; fog = fog || {};
+  const dec = st.decor;
+  const lights = live.lights != null ? live.lights : (dec ? dec.lights : 0);
+  const costumes = live.costumes != null ? live.costumes : (dec ? dec.costumes : 0);
+  const aiDec = dec && dec.mode === 'ai';
+  const m = live.music || st.music;
+  const XS = [95, 165, 235, 305];
+  let s = '<svg viewBox="0 0 400 208" role="img" aria-label="劇の舞台">';
+  s += '<defs><filter id="fg' + uid + '" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.5"/></filter></defs>';
+  s += backdropSVG(st, live, uid);
+  s += '<rect x="52" y="140" width="296" height="42" fill="#6d5233"/><line x1="52" y1="140" x2="348" y2="140" stroke="#8a6b43" stroke-width="2"/>';
+  for (let i = 0; i < 4; i++){
+    const x = XS[i];
+    if (i < lights) s += '<polygon points="' + x + ',38 ' + (x - 32) + ',152 ' + (x + 32) + ',152" fill="' + (aiDec ? '#ffffff' : '#ffe9a0') + '" opacity=".2"/>';
+    s += '<circle cx="' + x + '" cy="34" r="6" fill="' + (i < lights ? (aiDec ? '#fff' : '#ffe9a0') : '#4a5a58') + '"/>';
+  }
+  if (live.dim) s += '<rect x="52" y="24" width="296" height="160" fill="#050814" opacity="' + (live.dim * .6).toFixed(2) + '"/>';
+  if (live.spot){
+    const si = CREW.findIndex(c => c.id === live.spot), sx = XS[si];
+    if (si >= 0) s += '<polygon points="' + sx + ',26 ' + (sx - 36) + ',160 ' + (sx + 36) + ',160" fill="#fff7d6" opacity=".3"/>';
+  }
+  CREW.forEach((c, i) => {
+    const f = figSVG(c, i, st, bond, mood, lights, costumes, live.bob, fog[c.id] || 0, uid);
+    s += (live.spot && live.spot !== c.id) ? '<g opacity=".4">' + f + '</g>' : f;
+  });
+  if (live.deltas){
+    live.deltas.forEach(d => {
+      const i = CREW.findIndex(c => c.id === d.id);
+      if (i >= 0) s += '<text x="' + XS[i] + '" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#ffd84d" font-family="sans-serif">' + d.text + '</text>';
+    });
+  }
+  const ft = fogTotal(fog);
+  if (ft > 0) s += '<rect x="52" y="24" width="296" height="160" fill="#e6edf0" opacity="' + Math.min(.3, .05 * ft).toFixed(2) + '"/>';
+  const open = live.curtain != null ? live.curtain : 1;
+  const cw = 52 + 148 * (1 - open);
+  s += '<rect x="0" y="0" width="' + cw.toFixed(1) + '" height="184" fill="#7a2e3a"/><rect x="' + (400 - cw).toFixed(1) + '" y="0" width="' + cw.toFixed(1) + '" height="184" fill="#7a2e3a"/><rect x="0" y="0" width="400" height="24" fill="#8f3a49"/>';
+  s += '<path d="M' + (cw * .3).toFixed(1) + ' 24 V184 M' + (cw * .65).toFixed(1) + ' 24 V184 M' + (400 - cw * .3).toFixed(1) + ' 24 V184 M' + (400 - cw * .65).toFixed(1) + ' 24 V184" stroke="#5e222d" stroke-width="2"/>';
+  s += '<text x="14" y="203" font-size="10" fill="#b9cfc8" font-family="Zen Maru Gothic, sans-serif">劇伴</text>';
+  s += '<line x1="52" y1="199" x2="348" y2="199" stroke="#31524d" stroke-width="2"/>';
+  if (m){
+    if (m.mode === 'ai'){
+      for (let i = 0; i < 8; i++) s += '<circle cx="' + (62 + i * 38) + '" cy="199" r="4.5" fill="#8fd3ff"/>';
+    } else if (m.taps && m.taps.length){
+      m.taps.forEach((t, i) => { const x = 58 + Math.min(1, t / (8 * BEAT)) * 280; s += '<circle cx="' + x.toFixed(1) + '" cy="' + (196 + (i % 2) * 6) + '" r="4.5" fill="#ff8fb1"/>'; });
+    } else {
+      for (let i = 0; i < 4; i++) s += '<circle cx="' + (82 + i * 74) + '" cy="199" r="4.5" fill="#ff8fb1"/>';
+    }
+    if (m.sou) s += '<path d="M300 187 q5 -8 10 0 t10 0 t10 0 t10 0" fill="none" stroke="#b6ffb0" stroke-width="2.5" stroke-linecap="round"/>';
+  }
+  return s + '</svg>';
+}
+const scriptText = st => st.script ? '台本: ' + st.script.text : '台本: まだ';
+function renderHud(flash){
+  $hud.hidden = false;
+  $hud.classList.remove('flash', 'beat');
+  $hud.replaceChildren(h('div', {class:'stage'}), h('div', {class:'scr'}));
+  drawStage(null, flash);
+}
+function drawStage(live, flash){
+  if ($hud.hidden) return;
+  const stg = $hud.querySelector('.stage'), scr = $hud.querySelector('.scr');
+  if (!stg) return;
+  stg.innerHTML = stageSVG(G.st, G.bond, live, 'h', G.mood, G.fog);
+  scr.textContent = scriptText(G.st);
+  if (flash){ $hud.classList.remove('flash'); void $hud.offsetWidth; $hud.classList.add('flash'); }
+}
+function miniStage(st, bond, uid, mood, fog){
+  return h('div', {}, h('div', {class:'stage', html:stageSVG(st, bond, null, uid, mood, fog)}), h('div', {class:'scr', text:scriptText(st)}));
+}
+function setTop(label){
+  $day.textContent = label || '';
+  $heat.replaceChildren(h('span', {text:'熱 '}), ...Array.from({length:NSCENE}, (_, i) => h('i', {class: i < G.heat ? 'on' : ''})));
+}
+
+/* ---------------- scenes ---------------- */
+const AIX = '「みんなで力を合わせれば、きっと夢はかなう」';
+const SCENES = [
+  {key:'cast', label:'あと8週間', name:'配役',
+   setup:'黒板に「星ひろいの子」と書いてあるけど、名前がまだない。みんな黙ってる。ハルカが時計を見た。',
+   aiLine:'AIが「ハルカ」と出した。ミオもケンタも、うなずいただけだった。',
+   fogWho:['mio'], fogLine:'ミオが、手を上げかけた…気がした。',
+   reveal:{who:'mio', text:'手を上げようとしてた。AIが決めたあとだったから、やめた。ほんとは、やってみたかった。'},
+   aiHint:'0.5秒で決まる', handHint:'4人の様子を見て、決める', run:runCast,
+   ai:() => { G.st.lead = 'haruka'; G.st.leadMode = 'ai'; },
+   aiFx:'AIが配役を決めた。主役はハルカ。'},
+  {key:'script', label:'あと6週間', name:'台本',
+   setup:'クライマックスの台詞が決まらない。ハルカがノートに「締切」と書いて、丸で囲んだ。',
+   aiLine:'AIが一行出した。「みんなで力を合わせれば、きっと夢はかなう」。ハルカが黒板に写した。',
+   fogWho:['mio'], fogLine:'ミオが、ノートを裏返した。',
+   reveal:{who:'mio', text:'ノートの一番うしろに、一行だけ書いてた。見せなかった。AIのほうがちゃんとしてるから。…でも、ほんとは見てほしかった。'},
+   aiHint:'0.5秒で書ける', handHint:'4人の案から選ぶ', run:runScript,
+   ai:() => { G.st.script = {mode:'ai', who:null, text:AIX}; },
+   aiFx:'AIが台詞を書いた。' + AIX},
+  {key:'back', label:'あと5週間', name:'背景幕',
+   setup:'床に白い布が広げてある。ハルカが黒板に「あと5週間」と書いた。',
+   aiLine:'AIが夜空を出した。ムラも、にじみもない。',
+   fogWho:['haruka'], fogLine:'ハルカが教室を見回してた。何か、探してたみたいだった。',
+   reveal:{who:'haruka', text:'背景幕、もうできてる。予定より3日早い。助かった。…でも、みんなで床に広げて塗るの、ちょっと楽しみにしてた。言わないけど。'},
+   aiHint:'0.5秒で描ける', handHint:'放課後、みんなで床に広げて塗る', run:runBackdrop,
+   ai:() => { G.st.back = {mode:'ai'}; },
+   aiFx:'AIが背景幕を描いた。舞台に、整った夜空が加わった。'},
+  {key:'conf', label:'あと3週間', name:'稽古に来ない人',
+   setup:'ケンタの席は空いてる。ハルカがスマホを何度も見てる。',
+   aiLine:'AIがケンタの台詞を読んだ。稽古は予定どおり終わった。',
+   fogWho:['kenta'], fogLine:'ケンタの席は、ずっと空いたまま。どうしたんだろう。',
+   reveal:{who:'kenta', text:'AIの声、うまいな。俺より全然うまい。…休んでたのは、台詞が頭から飛ぶのがこわかったから。校門の前まで来て、3回引き返した。'},
+   aiHint:'0.5秒で解決する', handHint:'ちゃんと向き合う。時間かかるかも', run:runConflict,
+   ai:() => { G.st.kenta = 'ai'; },
+   aiFx:'ケンタの台詞は、AIの声が代わりに読むことになった。'},
+  {key:'music', label:'あと1週間', name:'劇伴',
+   setup:'ハルカ「音を作れる人、いない?」誰も答えない。ソウがヘッドホンをしたまま、スマホで音をいじってる。',
+   aiLine:'AIが音を作った。リズムは少しもズレない。',
+   fogWho:['sou'], fogLine:'ソウが、何か言いかけてやめた。',
+   reveal:{who:'sou', text:'AIの音を聞いた。ズレなくて、完璧だった。…俺が作ったのも、スマホに入ってる。8小節だけ。聞かせる勇気は、なかった。'},
+   aiHint:'0.5秒で作れる', handHint:'自分たちのリズムで作る', run:runMusic,
+   ai:() => { G.st.music = {mode:'ai'}; },
+   aiFx:'AIが劇伴を作った。一定のリズムで鳴る。'},
+  {key:'night', label:'前日の夜', name:'居残りリハ',
+   setup:'ソウは照明の配線がつながらなくて、床に座りこんでる。ミオは衣装がまだ半分。どっちか片方しか手伝えない。',
+   aiLine:'AIが照明も衣装も終わらせた。あなたは帰って寝た。',
+   fogWho:['mio','sou'], fogLine:'朝、教室に誰かいた気がする。',
+   reveal:{who:'mio', text:'衣装、もう全部できてた。私が縫うところは、なかった。針と糸、持ってきたのに。…ちょっと、さみしかった。'},
+   aiHint:'0.5秒で終わる', handHint:'みんなで残る。たぶん徹夜', run:runNight,
+   ai:() => { G.st.decor = {mode:'ai', lights:4, costumes:4, helped:null}; },
+   aiFx:'AIが照明と衣装を整えた。舞台は、すべて整った。'}
+];
+
+function panel(s, ...kids){
+  clearAll();
+  $board.replaceChildren(h('p', {class:'sub', text: s ? s.label + ' / ' + s.name : ''}), ...kids);
+}
+function opt(cls, title, hint, fn){
+  return h('button', {class:'chalk ' + cls, onclick:fn}, h('b', {text:title}), hint ? h('span', {text:hint}) : null);
+}
+function chatter(){
+  const away = id => id === 'kenta' && (G.st.kenta !== 'present' || SCENES[G.scene].key === 'conf');
+  const neg = G.moodOrder.slice().reverse().find(id => NEG.includes(G.mood[id]) && !G.fog[id] && !away(id));
+  if (neg) return h('p', {class:'say', text:CHATNEG[neg]});
+  if (fogTotal(G.fog) > 0 && G.scene % 2 === 1) return h('p', {class:'mo', text:'なんか、教室が静かだった。'});
+  let hi = null, lo = null;
+  CREW.forEach(c => {
+    if (away(c.id)) return;
+    if (!hi || G.bond[c.id] > G.bond[hi.id]) hi = c;
+    if (!lo || G.bond[c.id] < G.bond[lo.id]) lo = c;
+  });
+  return h('p', {class:'say', text: G.bond[hi.id] >= 3 ? CHAT[hi.id].hi : CHAT[lo.id].lo});
+}
+
+function renderStart(){
+  clearAll(); newGame(); setTop(0); $hud.hidden = true;
+  $board.replaceChildren(
+    h('p', {class:'sub', text:'クラス劇『星をひろう夜』'}),
+    h('h1', {}, '文化祭まで、', h('em', {text:'あと8週間。'})),
+    h('p', {class:'lead', text:'AIに頼めば、全部すぐ終わる。'}),
+    h('button', {class:'chalk y wide', text:'始める', onclick:()=>{ initAudio(); renderIntro(); }}),
+    h('p', {class:'foot', text:'音が出ます。所要時間は8〜10分です。'})
+  );
+}
+
+function renderIntro(){
+  clearAll(); setTop('はじまり'); renderHud(false);
+  const info = {
+    mio:'ノートの端に、いつも小さい絵を描いてる。声が小さくて、当てられると耳が赤くなる。',
+    kenta:'給食のおかわりは、いつも一番。宿題をよく忘れる。声が大きい。',
+    haruka:'クラスの学級委員で、この劇の演出。ノートに全員の予定が書いてある。遅刻した人には、黙って腕時計を見せる。「大丈夫」が口ぐせ。',
+    sou:'いつもすみでヘッドホンをしてる。話しかけると、返事が少し遅い。'
+  };
+  const play = {mio:'背景幕を描く人', kenta:'出演したい人', haruka:'演出(全体をまとめる人)', sou:'音と照明の機材の人'};
+  const cards = CREW.map((c, i) => h('div', {class:'intro', style:'--nc:' + c.c + '; animation-delay:' + (i * .35) + 's'},
+    h('div', {class:'ih'}, h('span', {class:'iav', style:'background:' + c.c, text:c.name.charAt(0)}), h('span', {class:'in', text:c.name}), h('span', {class:'ir', text:c.role})),
+    h('p', {class:'it', text:info[c.id]}), h('p', {class:'ip', text:'劇では: ' + play[c.id]})));
+  $board.replaceChildren(
+    h('p', {class:'sub', text:'クラス劇『星をひろう夜』'}),
+    h('p', {class:'setup', text:'文化祭まで、あと8週間。同じクラスの4人と、劇をやることになった。あなたも、その一人。'}),
+    ...cards,
+    h('div', {style:'height:8px'}),
+    h('button', {class:'chalk y wide', text:'つづける', onclick:() => { initAudio(); renderScene(); }})
+  );
+}
+
+function renderScene(){
+  const s = SCENES[G.scene]; setTop(s.label); renderHud(false);
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:s.setup}),
+    h('div', {class:'choices'},
+      opt('y', 'AIに頼む', s.aiHint, () => chooseAI(s)),
+      opt('p', 'みんなで作る', s.handHint, () => { initAudio(); s.run(s); })
+    )
+  );
+}
+
+/* choosing the AI leaves a fog: something you never get to see */
+function chooseAI(s){
+  s.ai();
+  G.aiCount++;
+  s.fogWho.forEach(id => { G.fog[id]++; });
+  G.log.push({scene:s, mode:'ai', fx:[s.aiFx]});
+  renderHud(true);
+  const HRS = {cast:2, script:6, back:5, conf:4, music:2, night:8};
+  panel(s,
+    h('p', {class:'big', text:s.aiLine}),
+    h('p', {class:'meta', text:'かかった時間: 0.5秒。手でやると、約' + HRS[s.key] + '時間かかるところだった。'}),
+    h('p', {class:'mo', text:s.fogLine}),
+    h('div', {style:'height:8px'}),
+    h('div', {class:'choices'},
+      opt('g', '浮いた時間で、' + NAME[s.reveal.who] + 'の様子を見に行く', '1時間くらい。会えば、わかるかも', () => visitAfterAI(s)),
+      opt('y', 'そのまま次へ', '浮いた時間は、別のことに使える', advance)
+    )
+  );
+}
+function visitAfterAI(s){
+  const id = s.reveal.who;
+  G.fog[id] = Math.max(0, G.fog[id] - 1);
+  bondUp(id, 1); G.hours += 1; G.visits++; G.called[id] = true; G.heard[s.key] = id;
+  setMood(id, 'ほっとした');
+  G.log.push({scene:s, mode:'visit', fx:['浮いた時間で、' + NAME[id] + 'のところに行った。' + NAME[id] + ' ♥+1(時間 +1時間)']});
+  renderHud(true);
+  panel(s,
+    h('p', {class:'meta', text:'浮いた時間で、' + NAME[id] + 'のところに行った。'}),
+    h('div', {class:'note', style:'--nc:' + COLOR[id]}, h('h4', {text:NAME[id] + 'の心の中'}), h('p', {text:s.reveal.text})),
+    h('button', {class:'chalk p', text:'つづける', onclick:advance})
+  );
+  drawStage({deltas:[{id:id, text:'♥+1'}]}, true);
+  later(() => drawStage(null, false), 1800);
+}
+
+const ART = {mio:{c:'#ff8fb1', ini:'ミ'}, kenta:{c:'#ffd84d', ini:'ケ'}, haruka:{c:'#8fd3ff', ini:'ハ'}, sou:{c:'#b6ffb0', ini:'ソ'}, you:{c:'#cfd8dc', ini:'あ'}};
+function artFig(id, x, y, s, extra){
+  const f = ART[id];
+  return '<g transform="translate(' + x + ' ' + y + ') scale(' + (s || 1) + ')">' + (extra || '') +
+    '<rect x="-8" y="-17" width="16" height="30" rx="4" fill="#16302f" stroke="' + f.c + '" stroke-width="2"/>' +
+    '<circle cx="0" cy="-26" r="9" fill="' + f.c + '"/>' +
+    '<text x="0" y="-22.5" text-anchor="middle" font-size="10" fill="#16302f" font-family="Yusei Magic, sans-serif">' + f.ini + '</text></g>';
+}
+function artBase(uid, inner){
+  return '<svg viewBox="0 0 200 200" role="img" aria-label="写真"><defs>' +
+    '<linearGradient id="sg' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb27a"/><stop offset=".55" stop-color="#d27ba0"/><stop offset="1" stop-color="#3b2a55"/></linearGradient>' +
+    '<radialGradient id="vg' + uid + '" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>' +
+    '<rect width="200" height="200" fill="url(#sg' + uid + ')"/>' +
+    '<path d="M40 0 V150 M100 0 V150 M160 0 V150 M0 60 H200 M0 110 H200" stroke="#fff" stroke-opacity=".12" stroke-width="3"/>' +
+    '<rect y="150" width="200" height="50" fill="#2a2f3a"/>' + inner +
+    '<rect width="200" height="200" fill="url(#vg' + uid + ')"/></svg>';
+}
+function emptyArt(uid){
+  return '<svg viewBox="0 0 200 200" role="img" aria-label="写真なし"><defs><linearGradient id="eg' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e9ec"/><stop offset="1" stop-color="#c9d1d5"/></linearGradient></defs>' +
+    '<rect width="200" height="200" fill="url(#eg' + uid + ')"/>' +
+    '<g fill="none" stroke="#9aa8ac" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><rect x="62" y="66" width="76" height="68" rx="6"/><path d="M62 118 l24 -22 l18 16 l12 -10 l22 20"/><circle cx="116" cy="86" r="6"/></g></svg>';
+}
+function sceneArt(key, uid){
+  const st = G.st, Y = 150; let inner = '', people = 0;
+  if (key === 'cast'){
+    const lead = st.lead; people = 3;
+    inner += artFig('haruka', 55, Y, 1) + artFig('mio', 100, Y, lead === 'mio' ? 1.3 : 1) + artFig('kenta', 150, Y, lead === 'kenta' ? 1.3 : 1);
+    const lx = {haruka:55, mio:100, kenta:150}[lead], sc = lead === 'haruka' ? 1 : 1.3;
+    inner += starSVG(lx, Y - 50 * sc, 8, '#ffd84d');
+    if (lead === 'kenta') inner += '<path d="M158 134 L176 108" stroke="#ffd84d" stroke-width="4" stroke-linecap="round"/>';
+    if (lead === 'haruka') inner += '<rect x="40" y="70" width="4" height="22" rx="2" fill="#f5f7f1" transform="rotate(20 42 80)"/><rect x="62" y="100" width="4" height="22" rx="2" fill="#f5f7f1" transform="rotate(-30 64 110)"/><rect x="72" y="125" width="4" height="22" rx="2" fill="#f5f7f1" transform="rotate(60 74 135)"/>';
+  } else if (key === 'script'){
+    people = 3; const mioPick = st.script && st.script.who === 'mio';
+    inner += '<rect x="26" y="22" width="148" height="70" rx="3" fill="#1d4a45" stroke="#b98a55" stroke-width="4"/>';
+    inner += mioPick
+      ? '<path d="M44 52 H110" stroke="#f5f7f1" stroke-width="3" stroke-linecap="round"/>'
+      : '<path d="M44 46 H140 M44 62 H120" stroke="#f5f7f1" stroke-width="3" stroke-linecap="round"/><path d="M150 40 V58" stroke="#ffd84d" stroke-width="4" stroke-linecap="round"/><circle cx="150" cy="68" r="2.5" fill="#ffd84d"/>';
+    inner += artFig('haruka', 60, Y, 1) + artFig('mio', 110, Y, 1) + artFig('kenta', 155, Y, 1);
+  } else if (key === 'back'){
+    const star = st.back && st.back.star; people = star ? 2 : 1;
+    inner += '<rect x="24" y="160" width="152" height="30" rx="3" fill="#2d4fa0"/>';
+    if (star) inner += starSVG(110, 175, 10, '#ffd84d') + '<path d="M104 180 L80 190" stroke="#ffd84d" stroke-width="3" stroke-linecap="round"/>' + artFig('mio', 140, Y, 1) + artFig('kenta', 62, Y, 1);
+    else inner += '<circle cx="46" cy="40" r="5" fill="#ffe9a0"/><circle cx="100" cy="30" r="5" fill="#ffe9a0"/><circle cx="154" cy="40" r="5" fill="#ffe9a0"/><circle cx="46" cy="40" r="15" fill="#ffe9a0" opacity=".25"/><circle cx="100" cy="30" r="15" fill="#ffe9a0" opacity=".25"/><circle cx="154" cy="40" r="15" fill="#ffe9a0" opacity=".25"/>' + artFig('haruka', 100, Y, 1);
+  } else if (key === 'conf'){
+    if (G.usedAIHelp){
+      people = 0;
+      inner += '<rect x="68" y="30" width="64" height="116" rx="10" fill="#16302f" stroke="#cfd8dc" stroke-width="3"/><rect x="76" y="48" width="48" height="78" rx="4" fill="#223b39"/><rect x="82" y="60" width="32" height="14" rx="7" fill="#ffd84d"/><rect x="88" y="84" width="30" height="14" rx="7" fill="#f5f7f1"/><text x="98" y="71" text-anchor="middle" font-size="9" fill="#16302f" font-family="sans-serif">3/3</text>';
+    } else if (G.leftToHaruka){
+      people = 1;
+      inner += '<rect x="56" y="112" width="48" height="7" rx="2" fill="#8a6b43"/><rect x="62" y="119" width="5" height="34" fill="#8a6b43"/><rect x="93" y="119" width="5" height="34" fill="#8a6b43"/><rect x="60" y="86" width="40" height="26" rx="3" fill="#6d5233"/><rect x="74" y="103" width="3" height="18" rx="1.5" fill="#f5f7f1" transform="rotate(75 76 112)"/>' + artFig('haruka', 150, Y, 1);
+    } else {
+      people = 2;
+      inner += artFig('kenta', 80, Y, 1) + artFig('you', 125, Y, 1) + '<circle cx="102" cy="132" r="9" fill="#f3e6c8"/><path d="M96 120 q-3 -8 2 -14 M104 120 q-3 -8 2 -14" stroke="#fff" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    }
+  } else if (key === 'music'){
+    if (st.music && st.music.sou){
+      people = 2;
+      inner += artFig('kenta', 85, Y, 1) + artFig('sou', 125, Y, 1) + '<path d="M82 120 Q105 92 128 120" fill="none" stroke="#f5f7f1" stroke-width="4" stroke-linecap="round"/><circle cx="82" cy="124" r="5" fill="#f5f7f1"/><circle cx="128" cy="124" r="5" fill="#f5f7f1"/>';
+    } else {
+      people = 1;
+      inner += '<rect x="30" y="128" width="120" height="10" rx="3" fill="#8a6b43"/><rect x="40" y="138" width="5" height="18" fill="#8a6b43"/><rect x="135" y="138" width="5" height="18" fill="#8a6b43"/><path d="M60 118 q10 -10 20 0 M95 114 q10 -10 20 0" stroke="#fff" stroke-opacity=".7" stroke-width="3" fill="none" stroke-linecap="round"/>' + artFig('sou', 175, Y, .9) + '<path d="M160 170 q4 6 8 0 M166 177 q4 6 8 0" stroke="#b6ffb0" stroke-width="2" fill="none"/>';
+    }
+  } else {
+    if (st.decor && st.decor.helped === 'sou'){
+      people = 1; let bl = '';
+      for (let i = 0; i < 6; i++) bl += '<circle cx="' + (30 + i * 28) + '" cy="34" r="14" fill="#ffe9a0" opacity=".25"/><circle cx="' + (30 + i * 28) + '" cy="34" r="6" fill="#ffe9a0"/>';
+      inner += bl + artFig('sou', 100, Y, 1.2) + '<g transform="translate(128 92)"><rect x="-12" y="-9" width="24" height="18" rx="9" fill="#f5f7f1"/><text x="0" y="4" text-anchor="middle" font-size="11" fill="#16302f" font-family="Yusei Magic, sans-serif">あ</text></g>';
+    } else {
+      people = 2;
+      inner += artFig('kenta', 80, Y, 1.1, '<path d="M-8 -16 L-26 14 L26 14 L8 -16 Z" fill="#ff8fb1" opacity=".85"/>') + artFig('mio', 145, Y, 1);
+    }
+  }
+  return {svg:artBase(uid, inner), people:people};
+}
+function snapHours(key){
+  if (key === 'cast') return 2;
+  if (key === 'script') return 6;
+  if (key === 'back') return (G.st.back && G.st.back.redo) ? 8 : 5;
+  if (key === 'conf') return (G.usedAIHelp || G.leftToHaruka) ? 1 : 4;
+  if (key === 'music') return 2;
+  return 8;
+}
+
+/* the camera roll: what stayed, and what never was taken */
+function buildRoll(){
+  const wrap = h('div', {class:'roll'});
+  const items = SCENES.map(s => ({s:s, mem:G.mem[s.key]}));
+  const showGrid = () => {
+    const tiles = items.map((it, i) => {
+      const svg = it.mem ? sceneArt(it.s.key, 't' + i).svg : emptyArt('t' + i);
+      return h('button', {class:'tile', 'aria-label':it.s.label + ' ' + it.s.name, onclick:() => showOne(i)},
+        h('div', {class:'ta', html:svg}), h('span', {class:'td', text:it.s.label}), it.mem ? null : h('span', {class:'tn', text:'写真なし'}));
+    });
+    wrap.replaceChildren(
+      h('div', {class:'rh'}, h('b', {text:'8週間'}), h('span', {text:items.length + '枚'})),
+      h('div', {class:'grid3'}, tiles),
+      h('div', {class:'row', style:'justify-content:center'}, h('button', {class:'chalk y', text:'リールで見る', onclick:playReel}))
+    );
+  };
+  const showOne = i => {
+    const it = items[i], s = it.s;
+    const art = it.mem ? sceneArt(s.key, 'v') : null;
+    const svg = art ? art.svg : emptyArt('v');
+    const meta = it.mem
+      ? ['撮影: あなた', '写っている人: ' + art.people + '人', '所要時間: 約' + snapHours(s.key) + '時間']
+      : ['撮影: なし', '写っている人: 0人', '生成: 0.5秒'];
+    const heardId = G.heard[s.key];
+    wrap.replaceChildren(
+      h('div', {class:'rh'}, h('button', {class:'chalk', text:'← 戻る', onclick:showGrid}), h('span', {text:s.label + ' / ' + s.name})),
+      h('div', {class:'big-art', html:svg}),
+      h('ul', {class:'meta2'}, meta.map(t => h('li', {text:t}))),
+      it.mem ? h('p', {class:'cap2', text:it.mem}) : h('p', {class:'cap2 dim', text:'記録: ' + s.aiFx}),
+      (!it.mem && heardId) ? h('p', {class:'cap2 dim', text:NAME[heardId] + 'から、あとで聞いた話はある。'}) : null
+    );
+  };
+  const playReel = () => {
+    clearAll();
+    const bars = items.map(() => h('i', {}, h('b', {})));
+    const artBox = h('div', {class:'ra'});
+    const cap = h('div', {class:'rc'});
+    const tag = h('div', {class:'rtag'});
+    wrap.replaceChildren(h('div', {class:'reel'}, h('div', {class:'rbars'}, bars), artBox, tag, cap));
+    let i = 0;
+    const NOTES = [440, 523.25, 659.25, 587.33, 392, 523.25];
+    const end = () => {
+      wrap.replaceChildren(
+        h('div', {class:'reel done'}, h('p', {class:'rend', text:'おわり'})),
+        h('div', {class:'row', style:'justify-content:center'}, h('button', {class:'chalk y', text:'カメラロールに戻る', onclick:showGrid}))
+      );
+    };
+    const step = () => {
+      if (i >= items.length){ end(); return; }
+      const it = items[i];
+      const dur = it.mem ? 3600 : 1300;          // a lived scene lasts; a skipped one is gone in half a second
+      artBox.innerHTML = it.mem ? sceneArt(it.s.key, 'r' + i).svg : emptyArt('r' + i);
+      artBox.classList.toggle('dark', !it.mem);
+      tag.textContent = it.s.label;
+      cap.className = it.mem ? 'rc' : 'rc nophoto'; cap.textContent = it.mem ? it.mem : '写真は、ない\n(AIで解決した場面)';
+      const b = bars[i].firstChild; b.style.transition = 'width ' + dur + 'ms linear'; void b.offsetWidth; b.style.width = '100%';
+      if (it.mem && AC) tone(NOTES[i % 6], clock(), 1.4, 'triangle', .05);
+      i++;
+      later(step, dur);
+    };
+    step();
+  };
+  showGrid();
+  return wrap;
+}
+
+function memoryOf(s){
+  const st = G.st;
+  if (s.key === 'cast'){
+    if (st.lead === 'kenta') return 'ケンタが「主役っぽいポーズ」を黒板の前でやって、全員に止められた。ミオだけ、笑いをこらえて肩が震えてた。';
+    if (st.lead === 'mio') return '「やってみる」って言ったミオの、ノートを持つ手が震えてた。ケンタが小声で「いけるって」と言ってた。';
+    return 'ハルカは「大丈夫」と言いながら、手が震えてペンを何度も落とした。ケンタが黙って拾って、渡した。ハルカは「ありがと」を言わなかったけど、耳が赤かった。';
+  }
+  if (s.key === 'script'){
+    if (st.script && st.script.who === 'mio') return 'ミオの一行を、ハルカが黒板に書いた。書き終わったあと、しばらく教室が静かだった。';
+    return 'ケンタの台詞を、全員で声に出して読んだ。3回目で、ミオが笑った。初めて聞いた笑い声だった。';
+  }
+  if (s.key === 'back'){
+    if (st.back && st.back.star) return '流れ星になったしみを、ミオが指でなぞった。「これ、消さなくてよかった」と言った。';
+    return 'ペンキを塗り直してる間に、日が暮れた。電気をつけたら、床の青がきれいだった。';
+  }
+  if (s.key === 'conf'){
+    if (G.usedAIHelp) return '夜中に、ケンタからスタンプだけ来た。「3回とも全部言えた」って書いてあった。';
+    if (G.leftToHaruka) return '稽古のあと、ケンタは先に帰った。ハルカが空いた席にペンを置いて、すぐ取って、また置いた。';
+    return '校庭のすみで、ケンタとコンビニの肉まんを半分こした。台詞の話は、ほとんどしなかった。';
+  }
+  if (s.key === 'music'){
+    if (st.music && st.music.sou) return 'ソウのヘッドホンを片方、ケンタが勝手に借りた。「…返して」と言いながら、ソウは少し笑ってた。';
+    return '机を叩く音が、だんだんそろっていった。ソウは隅で、足でリズムをとってた。';
+  }
+  if (st.decor && st.decor.helped === 'sou') return '配線がつながって、電球が全部ついた。ソウが「…あ」と言って、少し笑った。';
+  return 'ミオが縫った衣装の袖を、ケンタが着て「でかっ」と笑った。ミオは針を持ったまま、顔をそむけた。';
+}
+
+function doneHand(s, note, fx, hours, deltas, inner){
+  G.heat++; G.hours += hours; G.log.push({scene:s, mode:'hand', fx:fx}); setTop(s.label);
+  const mem = memoryOf(s); if (mem) G.mem[s.key] = mem;
+  renderHud(true);
+  panel(s,
+    h('p', {class:'big', text:'できた。'}),
+    h('p', {class:'say', text:note}),
+    h('ul', {class:'fx'}, fx.map(t => h('li', {text:t}))),
+    mem ? h('div', {class:'photo'}, h('div', {class:'pa', html:sceneArt(s.key, 'd').svg}), h('div', {class:'pd', text:s.label + ' / ' + s.name}), h('p', {class:'pt', text:mem})) : null,
+    h('button', {class:'chalk p', text:'次へ', onclick:() => { if (inner) renderInner(s, inner); else advance(); }})
+  );
+  drawStage({deltas:deltas || []}, true);
+  later(() => drawStage(null, false), 1800);
+}
+
+/* what the people around you felt */
+function renderInner(s, inner){
+  Object.keys(inner.moods || {}).forEach(k => setMood(k, inner.moods[k]));
+  drawStage(null, true);
+  const cards = inner.v.map((v, i) => h('div', {class:'note', style:'--nc:' + COLOR[v.who] + '; animation-delay:' + (i * .9) + 's'},
+    h('h4', {text:NAME[v.who] + 'の心の中'}), h('p', {text:v.text})));
+  const go = inner.hurt ? () => followUp(s, inner.hurt) : advance;
+  panel(s,
+    h('p', {class:'meta', text: inner.v.length > 1 ? 'ふたりの頭の中' : 'ひとりの頭の中'}),
+    ...cards,
+    h('button', {class:'chalk p', text:'つづける', onclick:go})
+  );
+}
+function followUp(s, id){
+  panel(s,
+    h('p', {class:'setup', text:NAME[id] + 'は、まだそこにいる。どうする?'}),
+    h('div', {class:'choices'},
+      opt('y', '声をかける', '気づいてるよ、って伝える', () => react(s, id, 'call')),
+      opt('s', 'そっとしておく', '何も言わない', () => react(s, id, 'leave'))
+    )
+  );
+}
+function react(s, id, which){
+  const r = REACT[id][which];
+  setMood(id, r.mood);
+  if (r.bond) bondUp(id, r.bond);
+  if (which === 'call') G.called[id] = true; else G.ignored[id] = true;
+  panel(s,
+    h('p', {class:'say', text:r.text}),
+    h('button', {class:'chalk p', text:'つづける', onclick:advance})
+  );
+  drawStage({deltas: r.bond ? [{id:id, text:'♥+1'}] : []}, true);
+  later(() => drawStage(null, false), 1800);
+}
+
+function advance(){
+  G.scene++;
+  if (G.scene >= SCENES.length) renderFinaleIntro(); else renderScene();
+}
+
+/* scene 1: casting */
+function runCast(s){
+  const pick = (id, fx, note, inner) => {
+    G.st.lead = id; G.st.leadMode = 'hand'; bondUp(id, 1);
+    doneHand(s, note, fx, 2, [{id:id, text:'♥+1'}], inner);
+  };
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:'誰を主役にする?'}),
+    h('div', {class:'choices'},
+      opt('y', 'ケンタに任せる', '自分から、手を上げた', () => pick('kenta',
+        ['ケンタが主役になった。ケンタ ♥+1', 'ミオは、上げかけた手を下ろした。'], 'ケンタ「よっしゃ。台詞、多い? …多くてもやるけど」',
+        {v:[{who:'kenta', text:'やるって言っちゃった。台詞を覚えられるか、不安だ。でも、顔には出さない。'},
+            {who:'mio', text:'手を上げようとしたのに、ケンタに先を越された。悔しい。…私には、無理だったのかも。'}],
+         moods:{kenta:'うれしい', mio:'もやもや'}, hurt:'mio'})),
+      opt('p', 'ミオに声をかける', '手を上げかけて、やめたのが見えた', () => pick('mio',
+        ['ミオに声をかけた。ミオは顔をノートで半分隠した。ミオ ♥+1', 'ケンタは「あー、ミオか。いいじゃん」と笑った。'], 'ミオ「え…私が? …むり。…でも、やってみたい」',
+        {v:[{who:'mio', text:'私が主役? こわい。でも、声をかけてもらえて、うれしい。'},
+            {who:'kenta', text:'俺じゃなかった。悔しい。でも、ミオを応援したい気もする。複雑だ。'}],
+         moods:{mio:'うれしい', kenta:'くやしい'}, hurt:'kenta'})),
+      opt('s', 'ハルカが兼任する', 'もう、やる気でいる', () => pick('haruka',
+        ['ハルカが、演出と主役を両方やることになった。ハルカ ♥+1', 'ハルカは「大丈夫」と言ったけど、ペンを持つ手が震えて、何度も床に落とした。'], 'ハルカ「いいよ、私がやる。演出も私だし」',
+        {v:[{who:'haruka', text:'やることが多すぎる。でも、私がやらなかったら、全部止まる。誰か代わってほしい。'},
+            {who:'mio', text:'ハルカ、また全部ひとりでやろうとしてる。手伝いたい。でも、何て言えばいいかわからない。'}],
+         moods:{haruka:'ひとりで抱えてる', mio:'もやもや'}, hurt:'haruka'}))
+    )
+  );
+}
+
+/* scene 2: script */
+function runScript(s){
+  const lines = {
+    mio:'「…ひとつだけ、持って帰っていい?」',
+    kenta:'「星くらい、全部ひろってやるって!」'
+  };
+  const pick = (id, other, note, inner) => {
+    G.st.script = {mode:'hand', who:id, text:lines[id]}; bondUp(id, 1);
+    doneHand(s, note, [NAME[id] + 'の案が、クライマックスの台詞になった。' + NAME[id] + ' ♥+1', other], 6, [{id:id, text:'♥+1'}], inner);
+  };
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:'台詞の案が、2つ出た。どっちにする?'}),
+    h('div', {class:'cards'},
+      h('div', {class:'card'}, h('p', {class:'who', text:'ミオの案'}), h('p', {class:'ln', text:lines.mio}), h('div', {style:'height:10px'}),
+        opt('p', 'こっちにする', '', () => pick('mio', 'ケンタは「…そっちのほうが、いいな」と言った。', 'ミオ「あ…うん。ありがとう」',
+          {v:[{who:'mio', text:'私の台詞が、みんなの前で読まれた。恥ずかしい。でも、うれしい。'},
+              {who:'kenta', text:'俺の案が通らなかった。悔しい。でも、ミオの台詞は、いい。次は負けない。'}],
+           moods:{mio:'うれしい', kenta:'くやしい'}, hurt:null}))),
+      h('div', {class:'card'}, h('p', {class:'who', text:'ケンタの案'}), h('p', {class:'ln', text:lines.kenta}), h('div', {style:'height:10px'}),
+        opt('y', 'こっちにする', '', () => pick('kenta', 'ミオはノートを閉じた。', 'ケンタ「だろ? ぜったいウケるって」',
+          {v:[{who:'kenta', text:'採用された。うれしい。…でも、ミオのノートが気になる。何を書いてたんだろう。'},
+              {who:'mio', text:'私の案は選ばれなかった。さみしい。私の台詞は、地味だから。'}],
+           moods:{kenta:'うれしい', mio:'さみしい'}, hurt:'mio'})))
+    )
+  );
+}
+
+/* scene 3: backdrop, painted live on the stage above */
+function runBackdrop(s){
+  const TOTAL = 20; let n = 0, waiting = false, spilled = false, redo = false, star = false, blob = null;
+  const say = h('p', {class:'say', text:'ケンタ「ペンキ、こっちに持ってきて!」'});
+  const btn = h('button', {class:'chalk y wide', text:'ぬる!'});
+  const extra = h('div', {class:'choices'});
+  const upd = () => drawStage({paint:{n:n, total:TOTAL, blob:blob}});
+  btn.addEventListener('click', () => {
+    if (waiting) return;
+    n++; upd(); noise(clock(), .08, {freq:1800, vol:.08});
+    if (n === 5) say.textContent = 'ミオ「ここ、もう少し濃くしてもいい?」';
+    if (n === 10 && !spilled){
+      spilled = true; waiting = true; btn.hidden = true; blob = 'spill'; upd();
+      say.textContent = 'ケンタ「あっ!」バケツが倒れて、ペンキがこぼれた。どうする?';
+      extra.replaceChildren(
+        opt('s', '塗り直す', 'ハルカが安心する。時間かかる', () => {
+          waiting = false; redo = true; blob = null; n = 6; upd(); btn.hidden = false; extra.replaceChildren();
+          say.textContent = 'ハルカ「やっぱり塗り直そう。本番だから」';
+        }),
+        opt('y', '味として残す', 'ケンタが笑う。流れ星になる', () => {
+          waiting = false; star = true; blob = 'star'; upd(); btn.hidden = false; extra.replaceChildren();
+          say.textContent = 'ケンタ「これ、流れ星にしようよ。だめ?」…こぼれたペンキが、流れ星になった。';
+        })
+      );
+    }
+    if (n === 15 && !waiting) say.textContent = redo ? 'ソウ「…あと少し」' : 'ソウ「…星、増えたね」';
+    if (n >= TOTAL){
+      btn.setAttribute('disabled','');
+      later(() => {
+        const fx = [], deltas = [];
+        if (redo){ bondUp('haruka', 1); deltas.push({id:'haruka', text:'♥+1'}); fx.push('こぼしたペンキを、塗り直した。ハルカ ♥+1(時間 +3時間)'); }
+        else { bondUp('kenta', 1); deltas.push({id:'kenta', text:'♥+1'}); fx.push('こぼしたペンキを、流れ星にした。ケンタ ♥+1'); }
+        bondUp('mio', 1); deltas.push({id:'mio', text:'♥+1'});
+        fx.push('放課後、床で一緒に塗った。ミオ ♥+1');
+        fx.push(redo ? '舞台に、ムラのない夜空が加わった。' : '舞台に、流れ星のある夜空が加わった。');
+        G.st.back = {mode:'hand', star:star, redo:redo};
+        const inner = redo
+          ? {v:[{who:'haruka', text:'ちゃんと直せて、ほっとした。でも、ケンタががっかりしてた。私のせいで空気が悪くなったかもしれない。'},
+                {who:'kenta', text:'流れ星、いいと思ったのに。残念だ。でも、ハルカが言うなら仕方ない。'}],
+             moods:{haruka:'ほっとした', kenta:'ふてくされ'}, hurt:null}
+          : {v:[{who:'kenta', text:'みんなが笑ってくれた。うれしい。こういうのがいいんだよ。'},
+                {who:'haruka', text:'ほんとは塗り直したかった。でも、みんなが笑ってたから、言い出せなかった。私だけ真面目すぎるのかな。'}],
+             moods:{kenta:'うれしい', haruka:'もやもや'}, hurt:'haruka'};
+        doneHand(s, redo ? '夜空は、きれいに仕上がった。' : '夜空に、予定になかった星が増えた。', fx, 5 + (redo ? 3 : 0), deltas, inner);
+      }, 450);
+    }
+  });
+  panel(s, h('p', {class:'meta', text:'上の舞台の布が、ボタンを押すたびに塗られていきます。'}), say, btn, extra);
+  drawStage({paint:{n:0, total:TOTAL, blob:null}});
+}
+
+/* scene 4: someone stops coming */
+function runConflict(s){
+  G.st.kenta = 'absent';
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:'ケンタの席は、今日も空いてる。'}),
+    h('div', {class:'choices'},
+      opt('y', 'ケンタを探しに行く', '時間かかる。会えるかもわからない', () => {
+        G.st.kenta = 'present'; bondUp('kenta', 2);
+        doneHand(s, 'ケンタ「…ごめん。ちゃんと行く」',
+          ['校庭のすみで、ケンタが台本を読んでた。「…台詞が、覚えられなくてさ。みんなの前だと、全部飛んじゃうんだ」ケンタ ♥+2', 'ケンタが、稽古に戻ってきた。'], 4, [{id:'kenta', text:'♥+2'}],
+          {v:[{who:'kenta', text:'見つかった。恥ずかしい。でも、台詞を覚えられないこと、言えた。笑われなくて、ほっとした。'},
+              {who:'haruka', text:'1日遅れたけど、取り戻せる。…私が探しに行けばよかったのかな。複雑だ。'}],
+           moods:{kenta:'ほっとした', haruka:'複雑'}, hurt:'haruka'});
+      }),
+      opt('g', 'ケンタの練習相手にAIを紹介する', '夜でも付き合ってくれる。会いには行かない', () => {
+        G.st.kenta = 'present'; bondUp('kenta', 1); G.usedAIHelp = true;
+        doneHand(s, 'ケンタ「AIの練習相手、まじで便利。何回間違えても、怒らないし」',
+          ['ケンタに、台詞の練習相手になるAIを紹介した。ケンタ ♥+1', '次の稽古に、ケンタが来た。台詞は入ってた。'], 1, [{id:'kenta', text:'♥+1'}],
+          {v:[{who:'kenta', text:'AIのおかげで、台詞は覚えられた。助かった。でも、みんなの前に立つと全部飛ぶのは、変わってない。こわい。誰にも言ってない。'},
+              {who:'haruka', text:'ケンタが戻ってきた。台詞も入ってる。助かった。…何があったのかは、聞いてない。'}],
+           moods:{kenta:'ほっとした', haruka:'ほっとした'}, hurt:null});
+      }),
+      opt('s', 'ハルカに任せる', '強めに言ってもらう。すぐ終わる', () => {
+        G.st.kenta = 'present'; bondUp('haruka', 1); bondUp('kenta', -1); G.leftToHaruka = true;
+        doneHand(s, '稽古は再開した。でも、ケンタは目を合わせなかった。',
+          ['ハルカが「ちゃんとやってよ。時間がないんだから」と言った。ハルカ ♥+1 / ケンタ ♥-1', 'ケンタは何も言わずに座った。'], 1, [{id:'haruka', text:'♥+1'}, {id:'kenta', text:'♥-1'}],
+          {v:[{who:'kenta', text:'言い返せなかった。台詞が覚えられないなんて、言えない。恥ずかしいし、こわい。'},
+              {who:'haruka', text:'言い方がきつかったかもしれない。でも、止まるのが一番まずい。謝るのは本番のあとにしよう。'}],
+           moods:{kenta:'ひりひり', haruka:'ひとりで抱えてる'}, hurt:'kenta'});
+      })
+    )
+  );
+  drawStage(null, true);
+}
+
+/* scene 5: your rhythm, with Sou's sound underneath if you asked him */
+function runMusic(s){
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:s.setup}),
+    h('div', {class:'choices'},
+      opt('g', 'ソウに声をかける', '断られるかもしれない', () => {
+        bondUp('sou', 1);
+        runBeat(s, true, ['ソウに声をかけた。ソウは少し迷ってから「…できる」と言った。ソウ ♥+1']);
+      }),
+      opt('s', '自分たちだけでやる', '机と手拍子で', () => runBeat(s, false, ['自分たちだけで、リズムを作ることにした。']))
+    )
+  );
+}
+function runBeat(s, withSou, fx){
+  const COUNT = 4, REC = 8; const taps = []; let recStart = 0, active = false;
+  const pulse = h('div', {class:'pulse count'});
+  const status = h('p', {class:'status', text: withSou ? 'ソウの音が流れてる。それに合わせて、好きに叩く。' : '4拍数えたら、8拍ぶん、好きなようにたたく。'});
+  const tapBtn = h('button', {class:'chalk p wide', text:'たたく!', disabled:true});
+  const startBtn = h('button', {class:'chalk y wide', text:'スタート'});
+  const flash = () => { pulse.classList.add('on'); $hud.classList.add('beat'); later(() => { pulse.classList.remove('on'); $hud.classList.remove('beat'); }, 90); };
+  tapBtn.addEventListener('pointerdown', e => {
+    e.preventDefault(); if (!active) return;
+    const now = clock(); kick(now, .55); flash();
+    const off = now - recStart;
+    if (off > -.15 && off < REC * BEAT + .2){
+      taps.push(Math.max(0, off));
+      drawStage({music:{mode:'hand', taps:taps.slice(), sou:withSou}});
+    }
+  });
+  startBtn.addEventListener('click', () => {
+    initAudio(); startBtn.setAttribute('disabled','');
+    const t0 = clock() + .3; recStart = t0 + COUNT * BEAT;
+    if (withSou) souLoop(t0, (COUNT + REC) * 2);   // same loop, same grid as opening night
+    for (let i = 0; i < COUNT + REC; i++){
+      click(t0 + i * BEAT, i < COUNT ? .07 : .03);
+      later(() => {
+        if (i < COUNT){ pulse.classList.add('count'); pulse.textContent = String(i + 1); status.textContent = 'いち、に、さん、し…'; }
+        else { pulse.classList.remove('count'); pulse.textContent = ''; status.textContent = 'いま!'; }
+        flash();
+      }, (t0 - clock() + i * BEAT) * 1000);
+    }
+    later(() => { active = true; tapBtn.removeAttribute('disabled'); }, (t0 - clock()) * 1000);
+    later(() => {
+      active = false; tapBtn.setAttribute('disabled','');
+      const out = fx.slice(); let note; const deltas = withSou ? [{id:'sou', text:'♥+1'}] : [];
+      if (taps.length >= 3){
+        let sum = 0; taps.forEach(t => { const m = t % BEAT; sum += Math.min(m, BEAT - m); });
+        G.beat = taps.slice(0, 16);
+        const loose = (sum / taps.length) > .11;
+        note = loose ? 'ケンタ「ずれてる! でも、なんかいいな」' : 'ケンタ「え、ぴったりじゃん」';
+        out.push(loose ? 'あなたのリズムは、ちょっとズレてた。それが、そのまま本番の劇伴になる。' : 'あなたのリズムは、ほぼ正確だった。それが、そのまま本番の劇伴になる。');
+      } else {
+        G.beat = null; note = 'ケンタ「叩かなくても、手拍子で合ってたよ」';
+        out.push('ほとんどたたかなかった。手拍子の素朴なリズムになった。');
+      }
+      if (withSou) out.push('ソウの音が、あなたのリズムの下で鳴ってた。本番でも、同じ形で鳴る。');
+      G.st.music = {mode:'hand', taps: G.beat ? G.beat.slice() : null, sou: withSou};
+      const inner = withSou
+        ? {v:[{who:'sou', text:'声をかけられて、びっくりした。でも、うれしい。作った音を、聞いてもらえるかもしれない。'}], moods:{sou:'うれしい'}, hurt:null}
+        : {v:[{who:'sou', text:'みんなが机を叩いてる。リズムがバラバラだ。混ざりたいけど、言い出せない。さみしい。'}], moods:{sou:'ひとり'}, hurt:'sou'};
+      doneHand(s, note, out, 2, deltas, inner);
+    }, (t0 - clock() + (COUNT + REC) * BEAT + .7) * 1000);
+  });
+  panel(s, h('p', {class:'meta', text:'あなたのリズムが、クライマックスで鳴ります。'}), pulse, status, startBtn, h('div', {style:'height:10px'}), tapBtn);
+  drawStage({music:{mode:'hand', taps:[], sou:withSou}});
+}
+
+/* scene 6: the last night; one of them will be alone */
+function runNight(s){
+  panel(s,
+    chatter(),
+    h('p', {class:'setup', text:s.setup}),
+    h('div', {class:'choices'},
+      opt('g', 'ソウの配線を手伝う', '照明は全部つく。衣装は少なくなる', () => runHold(s, 'sou')),
+      opt('p', 'ミオの衣装を手伝う', '衣装はそろう。照明は半分しかつかない', () => runHold(s, 'mio'))
+    )
+  );
+  G.st.decor = null; drawStage({lights:0, costumes:0});
+}
+function runHold(s, helped){
+  const TOTAL = 6000; let acc = 0, holding = false, last = 0, finished = false, shown = -1;
+  const fill = h('i', {}); const bar = h('div', {class:'bar'}, fill);
+  const say = h('p', {class:'say', text:'長押しして、みんなで起きてよう。'});
+  const btn = h('button', {class:'chalk p wide', text:'起きてる(長押し)'});
+  const text = () => acc < 1000 ? 'ケンタ「…ねむい」' : acc < 2500 ? 'ハルカ「あと1時間だけ、がんばろう」' :
+    acc < 4200 ? 'ミオ「…針、どこに置いたっけ」' : '窓の外が、少し明るくなってきた。';
+  const fin = helped === 'sou' ? {lights:4, costumes:2} : {lights:2, costumes:4};
+  const live = frac => {
+    const main = Math.floor(frac * 4 + .0001), half = Math.floor(frac * 2 + .0001);
+    return helped === 'sou' ? {lights:Math.min(4, main), costumes:Math.min(2, half)} : {lights:Math.min(2, half), costumes:Math.min(4, main)};
+  };
+  const loop = () => {
+    if (!holding || finished) return;
+    const now = performance.now(); acc += now - last; last = now;
+    const frac = Math.min(1, acc / TOTAL);
+    fill.style.width = (frac * 100) + '%'; say.textContent = text();
+    const k = Math.floor(frac * 8);
+    if (k !== shown){ shown = k; drawStage(live(frac)); }
+    if (acc >= TOTAL){
+      finished = true; holding = false;
+      bondUp(helped, 1);
+      G.st.decor = {mode:'hand', lights:fin.lights, costumes:fin.costumes, helped:helped};
+      const fx = [NAME[helped] + 'を手伝って、朝まで残った。' + NAME[helped] + ' ♥+1(時間 +8時間)'];
+      let inner;
+      if (helped === 'sou'){
+        fx.push('配線がつながって、照明が4つとも点いた。衣装は2人分しか間に合わなかった。');
+        fx.push('ミオは、ひとりで縫い続けてた。');
+        inner = {v:[{who:'mio', text:'針で指を刺した。痛い。誰も気づいてない。ひとりで縫ってるの、さみしい。'},
+                    {who:'sou', text:'電球が全部ついた。うれしい。誰かに手伝ってもらうの、初めてかもしれない。'}],
+                 moods:{mio:'ひとり', sou:'ほっとした'}, hurt:'mio'};
+      } else {
+        fx.push('衣装が4人分そろった。照明は2つしか点かなかった。');
+        fx.push('ソウは、ひとりで配線をやってた。');
+        inner = {v:[{who:'sou', text:'配線がつながらない。向こうは楽しそう。助けてって言いたいけど、言えない。'},
+                    {who:'mio', text:'衣装が間に合って、うれしい。でも、ソウがひとりで静かにしてるのが気になる。'}],
+                 moods:{sou:'ひとり', mio:'うれしい'}, hurt:'sou'};
+      }
+      doneHand(s, 'ケンタ「…朝? うわ、朝だ」', fx, 8, [{id:helped, text:'♥+1'}], inner);
+      return;
+    }
+    G.raf = requestAnimationFrame(loop);
+  };
+  const down = () => { if (finished || holding) return; holding = true; last = performance.now(); G.raf = requestAnimationFrame(loop); };
+  const up = () => { if (finished) return; holding = false; if (acc > 0) say.textContent = '…zzz(押して、続けよう)'; };
+  btn.addEventListener('pointerdown', e => { e.preventDefault(); down(); });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev => btn.addEventListener(ev, up));
+  btn.addEventListener('contextmenu', e => e.preventDefault());
+  btn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat){ e.preventDefault(); down(); } });
+  btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); up(); } });
+  panel(s, h('p', {class:'meta', text:'押し続けてる間だけ、夜が進みます。上の舞台が、少しずつ整っていきます。'}), bar, say, btn);
+  drawStage({lights:0, costumes:0});
+}
+
+/* ---------------- opening night: a play, not a concert ---------------- */
+function renderFinaleIntro(){
+  clearAll(); setTop('当日'); renderHud(false);
+  $board.replaceChildren(
+    h('p', {class:'sub', text:'そして、文化祭の日'}),
+    h('h1', {}, h('em', {text:'開演。'})),
+    h('p', {class:'lead', text:'上の舞台と4人が、そのまま幕を開けます。'}),
+    h('button', {class:'chalk y wide', text:'ブザーを鳴らす', onclick:playFinale})
+  );
+}
+
+/* what each person feels at the end, and exactly why */
+function endState(id){
+  const st = G.st, n = G.fog[id];
+  if (n >= 2) return {fact:'この人の気持ちは、聞けなかった。', feel:'？', body:'', line:'…', fog:true};
+  let r;
+  if (id === 'mio'){
+    if (st.lead === 'mio' && st.leadMode === 'hand') r = {fact:'ミオに「やってみない?」と声をかけた。', feel:'こわいけど、うれしい', body:'舞台の袖で、ミオの膝が震えてる。', line:'台詞、1回飛んじゃった。…でも、最後まで言えた。'};
+    else if (st.script && st.script.who === 'mio') r = {fact:'ミオの一行を、台詞にした。', feel:'うれしい', body:'ミオは袖で、自分の台詞に合わせて口を動かしてる。', line:'私の台詞が、本当に声になった。うれしい。'};
+    else if (G.ignored.mio) r = {fact:'ミオが落ち込んでたのに、そっとしておいた。', feel:'さみしい', body:'ミオは、拍手に少し遅れて手を叩いた。', line:'ちょっとだけ、声をかけてほしかったな。'};
+    else if (G.called.mio) r = {fact:'ミオに声をかけた。', feel:'ほっとした', body:'ミオが袖から顔を出して、あなたに小さく手を振った。', line:'あのとき、気づいてくれて、ありがとう。'};
+    else r = {fact:'ミオとは、あまり話さなかった。', feel:'ふつう', body:'ミオは客席の隅で、ノートを膝の上に開いてる。', line:'ノートの一行は、結局見せられなかった。でも、この劇は好き。'};
+  } else if (id === 'kenta'){
+    if (st.kenta === 'ai' && G.called.kenta) r = {fact:'ケンタの声をAIに任せた。あとで話を聞きに行った。', feel:'くやしいけど、ほっとした', body:'ケンタは客席で、スピーカーから流れる自分の声を聞いてる。', line:'AIの声、うまいな。くやしい。でも、あのとき話せてよかった。'};
+    else if (st.kenta === 'ai') r = {fact:'ケンタの声を、AIに任せた。', feel:'くやしい', body:'ケンタは客席で、自分の台詞のところだけ、口が動いてる。', line:'俺の台詞なのに、俺の声じゃない。くやしい。'};
+    else if (st.lead === 'kenta') r = {fact:'ケンタに主役を任せた。', feel:'うれしい', body:'ケンタは舞台に出る前に、袖で深呼吸した。', line:'主役、思ったより緊張した。でも、やってよかった。'};
+    else if (st.script && st.script.who === 'kenta') r = {fact:'ケンタの台詞を選んだ。', feel:'うれしい', body:'ケンタは袖で、小さくガッツポーズをした。', line:'俺の台詞で、みんなが笑った。最高。'};
+    else if (G.usedAIHelp) r = {fact:'ケンタにAIの練習相手を紹介した。', feel:'ほっとした。でも、こわい', body:'ケンタは本番前、手のひらを何度もズボンで拭いてた。', line:'AIのおかげで台詞は覚えられた。でも、人前に立つのは、やっぱりこわかった。'};
+    else if (G.ignored.kenta || G.bond.kenta <= 1) r = {fact:'ケンタに、ちゃんと向き合えなかった。', feel:'むりしてる', body:'ケンタは笑ってるけど、目が笑ってない。', line:'ウケたよな? …俺、ちゃんとできてたよな?'};
+    else if (G.bond.kenta >= 3) r = {fact:'ケンタと向き合った。', feel:'ほっとした', body:'ケンタは袖で座りこんで、大きく息を吐いた。', line:'こわかったけど、逃げなくてよかった。'};
+    else r = {fact:'ケンタとは、あまり話さなかった。', feel:'ふつう', body:'ケンタは袖で、パンを半分に割ってる。', line:'食う? …いらない?'};
+  } else if (id === 'haruka'){
+    const load = (st.lead === 'haruka' && st.leadMode === 'hand' ? 1 : 0) + (G.leftToHaruka ? 1 : 0);
+    if (st.lead === 'haruka' && st.leadMode === 'ai') r = {fact:'主役をAIに決めてもらった。', feel:'よくわからない', body:'ハルカは舞台で、一度も台本を見なかった。', line:'うまくいった。でも、自分でやった感じがしない。'};
+    else if (load >= 1 && G.called.haruka) r = {fact:'ハルカにたくさん任せた。声もかけた。', feel:'つかれたけど、うれしい', body:'ハルカは、ペンを握った手の力を抜いた。', line:'めっちゃ疲れた。でも、声をかけてもらえて、うれしかった。'};
+    else if (load >= 1 && G.ignored.haruka) r = {fact:'ハルカにたくさん任せた。声はかけなかった。', feel:'つかれた', body:'ハルカは袖で、自分の肩を叩いてる。', line:'全部こっちに回ってきた。…やりきったけど、ちょっと、さみしい。'};
+    else if (load >= 1) r = {fact:'ハルカにたくさん任せた。', feel:'つかれた。でも、やりきった', body:'ハルカは、カーテンコールのあと、その場に座りこんだ。', line:'ひざ、笑ってる。でも、やりきった。'};
+    else if (G.ignored.haruka) r = {fact:'ハルカが黙ってたのに、そっとしておいた。', feel:'ひとりだった', body:'ハルカは、ひとりで片付けのチェックリストを読んでる。', line:'誰かに「おつかれ」って言ってほしかった。'};
+    else if (G.called.haruka) r = {fact:'ハルカに声をかけた。', feel:'ほっとした', body:'ハルカが、あなたの隣に立った。', line:'ひとりじゃないって、ちょっと思えた。'};
+    else r = {fact:'ハルカとは、あまり話さなかった。', feel:'まあまあ', body:'ハルカがストップウォッチを止めた。', line:'予定どおり。…でも、予定どおりじゃなかったところが、一番よかった。'};
+  } else {
+    if (st.music && st.music.sou) r = {fact:'ソウに声をかけた。', feel:'うれしい', body:'ソウは音響席で、ヘッドホンを外して机に置いた。', line:'俺の音が、劇の中で鳴ってた。うれしい。'};
+    else if (G.ignored.sou) r = {fact:'ソウに声をかけなかった。', feel:'ひとり', body:'ソウの席のまわりに、誰もいない。', line:'ひとりで聞いてた。みんなの笑い声が、遠かった。'};
+    else if (G.called.sou) r = {fact:'AIに任せたあと、ソウに会いに行った。', feel:'ほっとした', body:'ソウは、スマホの画面をこっちに向けかけて、やめた。', line:'作った音、いつか聞いてほしい。…今日じゃなくていい。'};
+    else if (st.decor && st.decor.helped === 'sou') r = {fact:'ソウの配線を手伝った。', feel:'うれしい', body:'照明が点いたとき、ソウが小さく笑った。', line:'手伝ってって言えなかったのに、手伝ってもらえた。うれしかった。'};
+    else if (st.decor && st.decor.helped === 'mio') r = {fact:'前日の夜、ソウはひとりで配線をやってた。', feel:'さみしい', body:'照明は半分しか点いてない。ソウは消えてる電球を見てる。', line:'助けてって、言えばよかった。'};
+    else r = {fact:'ソウとは、あまり話さなかった。', feel:'ふつう', body:'ソウはヘッドホンを首にかけて、拍手を聞いてる。', line:'拍手、思ったよりうるさくなかった。'};
+  }
+  r.fog = false; r.partial = n === 1;
+  return r;
+}
+
+function playFinale(){
+  clearAll(); initAudio(); renderHud(false);
+  const heat = G.heat, st = G.st;
+  const tier = heat === 0 ? 0 : (heat <= 2 ? 1 : (heat <= 4 ? 2 : 3));
+  const bm = st.music;
+  const handBeat = bm.mode === 'hand' && G.beat;
+  const pat = handBeat ? G.beat : [0,1,2,3,4,5,6,7].map(i => i * BEAT);
+  const A = {curtain:0, spot:null, dim:0, bob:0};
+  const tws = []; let bowing = false, bowStart = 0, running = true, lastDraw = 0;
+  const tween = (k, to, ms) => { for (let i = tws.length - 1; i >= 0; i--) if (tws[i].k === k) tws.splice(i, 1); tws.push({k:k, from:A[k], to:to, t0:performance.now(), ms:ms}); };
+  const loop = () => {
+    if (!running) return;
+    const now = performance.now();
+    for (let i = tws.length - 1; i >= 0; i--){
+      const t = tws[i], p = Math.min(1, (now - t.t0) / t.ms), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      A[t.k] = t.from + (t.to - t.from) * e; if (p >= 1) tws.splice(i, 1);
+    }
+    if (bowing) A.bob = Math.abs(Math.sin((now - bowStart) / 450 * Math.PI));
+    if (now - lastDraw > 50){ lastDraw = now; drawStage(A); }
+    G.raf = requestAnimationFrame(loop);
+  };
+  drawStage(A); G.raf = requestAnimationFrame(loop);
+
+  /* all music is laid on one beat grid: the climax starts at CL, and your taps and Sou's loop share that origin */
+  if (AC){
+    const CL = 12.5;
+    const t0 = AC.currentTime + .2;
+    const pv = tier === 0 ? .03 : .045;
+    tone(880, t0, 1.6, 'sine', .07); tone(1318.5, t0 + .05, 1.2, 'sine', .04);
+    [220, 261.63, 329.63].forEach(f => pad(f, t0 + .5, 11, pv));
+    [174.61, 220, 261.63].forEach(f => pad(f, t0 + 8, 5, pv));
+    if (tier >= 1){
+      const M1 = [659.25, 783.99, 880, 783.99, 659.25, 587.33, 523.25, 587.33, 659.25, 783.99];
+      M1.forEach((f, i) => tone(f, t0 + 4.5 + i * BEAT, .9, 'triangle', .04 + tier * .01));
+    }
+    [261.63, 329.63, 392, 130.81].forEach(f => pad(f, t0 + CL, 5, tier === 0 ? .035 : .06));
+    if (tier >= 1 && !(bm.mode === 'hand' && bm.sou)){
+      const M2 = [880, 987.77, 1046.5, 987.77, 880, 783.99, 880, 1046.5];
+      M2.forEach((f, i) => tone(f, t0 + CL + i * BEAT, .8, 'triangle', .05 + tier * .01));
+    }
+    pat.forEach(o => tick(t0 + CL + o, tier === 0 ? .025 : .06));
+    if (bm.mode === 'hand' && bm.sou) souLoop(t0 + CL, 16);
+    const ap = {0:[25, 3, .05], 1:[70, 5, .06], 2:[110, 6.5, .07], 3:[160, 8, .08]}[tier];
+    applause(t0 + 19.5, ap[1], ap[0], ap[2]);
+    [261.63, 329.63, 392, 523.25].forEach(f => pad(f, t0 + 20, 6, .035));
+  }
+
+  const cap = h('p', {class:'cap'}), clx = h('p', {class:'clx'});
+  $board.replaceChildren(h('p', {class:'sub', text:'文化祭の日'}), cap, clx);
+  const ln = NAME[st.lead];
+  const lBack = st.back.mode === 'ai' ? '背景幕の夜空は、ムラひとつなかった。' : (st.back.star ? '背景幕の流れ星に、客席から小さく声が上がった。' : '背景幕は、筆のあとが残る夜空になってた。');
+  const lLead = (st.leadMode === 'ai' ? 'AIが選んだ' : '') + ln + 'が、主役として立ってた。';
+  const lDec = st.decor.mode === 'ai' ? '照明も衣装も、全部そろってた。' :
+    (st.decor.helped === 'sou' ? '照明は全部ついた。衣装は、ところどころ手作りっぽかった。' : '照明は半分だけ。でも、衣装が舞台を華やかにしてた。');
+  const lMus = bm.mode === 'ai' ? '一定のリズムで、音楽が鳴りはじめた。' : (bm.sou ? 'あなたたちのリズムの下で、ソウの音が鳴ってた。' : 'あなたたちのリズムが、ズレたまま鳴りはじめた。');
+  const at = (sec, fn) => later(fn, sec * 1000 + 200);
+  at(.3, () => { cap.textContent = '開演のブザーが鳴った。客席が静かになる。'; });
+  at(1, () => tween('curtain', 1, 2600));
+  at(4.5, () => { cap.textContent = lBack; });
+  at(7.5, () => { cap.textContent = lLead; A.spot = st.lead; tween('dim', .6, 900); });
+  at(10.5, () => { cap.textContent = lDec; A.spot = null; tween('dim', 0, 900); });
+  at(12.5, () => { cap.textContent = lMus; A.spot = st.lead; tween('dim', .55, 700); clx.textContent = st.script.text; });
+  at(17.5, () => { cap.textContent = '…'; tween('dim', .8, 600); });
+  at(19.5, () => { cap.textContent = 'カーテンコール。'; A.spot = null; clx.textContent = ''; tween('dim', 0, 300); tween('curtain', 0, 1200); });
+  at(21.5, () => tween('curtain', 1, 1200));
+  at(22.8, () => { bowing = true; bowStart = performance.now(); });
+  at(26, () => { bowing = false; A.bob = 0; });
+  at(27, () => { running = false; cancelAnimationFrame(G.raf); drawStage(null, false); showEndVoices(); });
+}
+
+function showEndVoices(){
+  const cards = CREW.map((c, i) => {
+    const r = endState(c.id);
+    return h('div', {class:'end' + (r.fog ? ' fog' : ''), style:'--nc:' + (r.fog ? '#cfd8dc' : c.c) + '; animation-delay:' + (i * .6) + 's'},
+      h('div', {class:'eh'}, h('span', {class:'en', text:c.name}), h('span', {class:'ef', text:r.feel})),
+      h('p', {class:'ew', text:'あなたは: ' + r.fact}),
+      r.body ? h('p', {class:'eb', text:r.body}) : null,
+      h('p', {class:'el', text:r.fog ? '…' : '「' + r.line + '」'}),
+      r.partial ? h('p', {class:'eg', text:'ただ、一度だけ、聞けなかったことがある。'}) : null
+    );
+  });
+  $board.replaceChildren(
+    h('p', {class:'sub', text:'幕が下りたあと'}),
+    h('p', {class:'meta', text:'4人の、いまの気持ち。'}),
+    ...cards,
+    h('div', {class:'row', style:'justify-content:center'}, h('button', {class:'chalk y', text:'並べて見る', onclick:renderCompare}))
+  );
+}
+
+/* ---------------- comparison ---------------- */
+function brow(label, a, m, max, fa, fm){
+  const bar = (cls, v, text) => h('div', {class:'bar2 ' + cls},
+    h('span', {class:'bt', text:text}),
+    h('div', {class:'trk'}, h('i', {style:'width:' + Math.max(2, Math.min(100, v / max * 100)) + '%'})));
+  return h('div', {class:'brow'},
+    h('p', {class:'bl', text:label}),
+    bar('', a, 'AIに全部任せた場合: ' + fa),
+    bar('me', m, 'あなた: ' + fm));
+}
+
+/* sharing the result */
+function shareText(){
+  const photos = Object.keys(G.mem).length, n = G.aiCount;
+  const line = n === 0 ? 'AIには一度も頼らなかった。残った写真は' + photos + '/6枚。'
+             : (n === 6 ? '全部AIに任せた。残った写真は' + photos + '/6枚。'
+             : 'AIに' + n + '回任せた。残った写真は' + photos + '/6枚。');
+  return '文化祭まで、あと8週間。\n' + line + '\n#文化祭まであと8週間';
+}
+function buildShare(){
+  const text = shareText();
+  const here = /^https?:/.test(location.href) ? location.href : '';   // inside a preview frame the address is 'about:srcdoc', so it is left out
+  const url = SHARE_URL || here;
+  const href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + (url ? '&url=' + encodeURIComponent(url) : '');
+  const ta = h('textarea', {class:'msg', rows:'4', readonly:'', 'aria-label':'シェアする文章'});
+  ta.value = text + (url ? '\n' + url : '');
+  const status = h('span', {class:'foot', style:'margin:0', text:''});
+  const copy = () => {
+    const done = () => { status.textContent = 'コピーしました'; };
+    const fallback = () => { ta.focus(); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { status.textContent = '選択したので、コピーしてください'; } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done, fallback); else fallback();
+  };
+  return h('div', {},
+    ta,
+    h('div', {class:'share'},
+      h('a', {class:'chalk y', href:href, target:'_blank', rel:'noopener', text:'Xでシェア'}),
+      h('button', {class:'chalk', text:'文章をコピー', onclick:copy}),
+      status)
+  );
+}
+
+function renderCompare(){
+  clearAll(); setTop(''); $hud.hidden = true;
+  const aiFog = {mio:0, kenta:0, haruka:0, sou:0};
+  SCENES.forEach(s => s.fogWho.forEach(id => { aiFog[id]++; }));
+  const aiSt = {lead:'haruka', leadMode:'ai', kenta:'ai', script:{mode:'ai', who:null, text:AIX}, back:{mode:'ai'},
+                decor:{mode:'ai', lights:4, costumes:4, helped:null}, music:{mode:'ai'}};
+  const aiBond = {mio:1, kenta:1, haruka:1, sou:1};
+  const sumBond = CREW.reduce((a, c) => a + G.bond[c.id], 0);
+  const aiFogTotal = fogTotal(aiFog), myFogTotal = fogTotal(G.fog);
+  const left = h('div', {class:'col'}, h('h3', {text:'全部AIに任せた場合'}), miniStage(aiSt, aiBond, 'l', {}, aiFog));
+  const right = h('div', {class:'col me'}, h('h3', {text:'あなたの8週間'}), miniStage(G.st, G.bond, 'r', G.mood, G.fog));
+
+  const fx = [];
+  G.log.forEach(l => l.fx.forEach(t => fx.push(h('li', {text:t}))));
+
+  const roll = buildRoll();
+  const visits = G.visits;
+  let closing;
+  if (G.heat === 0 && visits === 0) closing = '全部AIに任せたので、舞台の見た目は同じでした。そのかわり、浮いた時間は8週間ぶん。写真は、一枚も増えませんでした。';
+  else if (G.heat === 0) closing = '全部AIに任せて浮いた時間で、' + visits + '回、人に会いに行きました。聞けた話はあるけど、その場にいた写真は、ありません。';
+  else if (G.aiCount === 0) closing = 'AIは一回も使いませんでした。そのぶん時間はかかったけど、写真は6枚そろいました。ただ、全部見えたからって、全部うまくいくわけじゃないです。';
+  else closing = 'どちらが正しいかは、このゲームは言いません。AIに任せて浮いた時間も、手でやって残った写真も、どっちも本当にありました。' + (visits > 0 ? '浮いた時間で会いに行った人の声は、ちゃんと聞こえました。' : '');
+
+  $board.replaceChildren(
+    h('p', {class:'sub', text:'この8週間'}),
+    
+    brow('AIに任せた回数', 6, G.aiCount, 6, '6回', G.aiCount + '回'),
+    brow('かけた時間', 0, G.hours, Math.max(1, G.hours), '3秒', G.hours + '時間'),
+    brow('4人との絆(合計)', 4, sumBond, 16, '4 / 16', sumBond + ' / 16'),
+    brow('見えなかったもの(モヤ)', aiFogTotal, myFogTotal, Math.max(1, aiFogTotal), aiFogTotal + '個', myFogTotal + '個'),
+    h('p', {class:'lead', text:'カメラロール'}), roll,
+    h('div', {class:'note ai', style:'animation-delay:.3s'},
+      h('h4', {text:'このゲームについて'}),
+      h('p', {style:'white-space:pre-line; font-family:var(--body); font-size:.95rem; line-height:1.9', text:FINAL_MESSAGE})),
+    h('p', {class:'lead', text:'結果をシェアする'}),
+    buildShare(),
+    
+    
+    
+    h('p', {class:'lead', text:'あなたの選択と、その結果'}),
+    h('ul', {class:'fx'}, fx),
+    h('div', {class:'row'}, h('button', {class:'chalk p', text:'もう一回', onclick:renderStart}))
+  );
+}
+
+renderStart();
+</script>
+</body>
+</html>
